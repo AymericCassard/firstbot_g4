@@ -8,6 +8,7 @@ webcam = cv2.VideoCapture(0)
 
 #VARIABLE
 last_time = time.time()
+x, y, theta = 0, 0, 0
 
 #BOOLEANS
 detect_line = True
@@ -100,8 +101,6 @@ dxl_io.set_wheel_mode([1])
 dxl1=1
 dxl2=2
 
-dynamics.initialize(0,0,0)
-
 while(True):
     if detect_line :
         ret, frame = webcam.read()
@@ -127,9 +126,10 @@ while(True):
             break
 
     if capture_positions :
-        if time.time() - last_time > 0.1:  # Capture every 0.1 seconds
+        diff_time = time.time() - last_time
+        if diff_time > 0.2:  # Capture every 0.1 seconds
             last_time = time.time()
-            dynamics.detect_path(left_speed, right_speed, dxl_io, dxl1, dxl2)
+            x, y, theta = dynamics.detect_path(diff_time, x, y, theta, dxl_io, dxl1, dxl2)
 
 
 webcam.release()

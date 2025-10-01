@@ -7,9 +7,6 @@ f = open("positions.txt", "w+")
 
 R_roue = 51.5 / 1000
 d = 135 / 1000
-x = 0
-y = 0
-theta = 0
 last_time = time.time()
 
 def deg2rad(deg):
@@ -17,18 +14,6 @@ def deg2rad(deg):
 
 def rad2deg(rad):
     return rad * 180 / np.pi
-
-def initialize(x0, y0, theta0):
-    global x, y, theta, list_pos, last_time
-    last_time = time.time()
-    x = x0
-    y = y0
-    theta = theta0
-
-def get_wheel_ang_pos(dxl_io, dxl1, dxl2):
-    thetal = deg2rad(dxl_io.get_present_position([dxl1])[0])
-    thetar = deg2rad(dxl_io.get_present_position([dxl2])[0])
-    return thetal, thetar
 
 def direct(wl, wr):
     vr = R_roue*wr
@@ -54,13 +39,11 @@ def ICR_to_coo(R, w, x, y, dt):
     y += dxr*np.sin(dtheta) + dyr*np.cos(dtheta)
     return x, y
 
-def detect_path(wl, wr, dxl_io, dxl1=1, dxl2=2):
-    print("detect_path")
-    global x, y, theta, last_time
+def detect_path(diff_time, x, y, theta, dxl_io, dxl1=1, dxl2=2):
+    print("########## detect_path ########## ")
     dt = time.time() - last_time
     last_time = time.time()
-    thetal, thetar = get_wheel_ang_pos(dxl_io, dxl1, dxl2)
-    wl = deg2rad(dxl_io.get_present_speed([dxl1])[0])
+    wl = deg2rad(-1 * dxl_io.get_present_speed([dxl1])[0])
     wr = deg2rad(dxl_io.get_present_speed([dxl2])[0])
     print("wl :",rad2deg(wl),"wr :", rad2deg(wr))
     R, w = direct(wl, wr)
@@ -69,7 +52,7 @@ def detect_path(wl, wr, dxl_io, dxl1=1, dxl2=2):
     theta += w*dt
     
     f.write(str(x)+","+str(y)+","+str(theta)+"\n")
-
+    return x,y, theta
 
 
     
