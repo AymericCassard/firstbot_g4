@@ -127,6 +127,11 @@ def moyenne_couleurs_full_image(img):
     upper_yellow = np.array([30, 255, 255])
     mask_yellow = cv2.inRange(hsv, lower_yellow, upper_yellow)
     result_yellow = cv2.bitwise_and(degraded, degraded, mask=mask_yellow)
+    # masque marron
+    lower_brown = np.array([10, 100, 20])
+    upper_brown = np.array([20, 255, 200])
+    mask_brown = cv2.inRange(hsv, lower_brown, upper_brown)
+    result_brown = cv2.bitwise_and(degraded, degraded, mask=mask_brown)
 
     jaune_trouve=[]
     rouge_trouve=[]
@@ -180,7 +185,7 @@ def moyenne_couleurs_full_image(img):
             b, g, r = result_brown[y, x]
             #print(f"Pixel ({x},{y}) = Bleu:{b}, Vert:{g}, Rouge:{r}")
             if r!=0:
-                jaune_trouve.append(x)
+                marron_trouve.append(x)
 
     if len(marron_trouve) > len(jaune_trouve) and \
        len(marron_trouve) > len(rouge_trouve) and \
@@ -212,12 +217,16 @@ positions_couleurs= moyenne_couleurs(frame)
 t1 = time.time()
 marron_found = True
 while(True):
-    t2 = time.time()
+	t2 = time.time()
 
     # on ne set pas les moteurs quand on trouve du marron
+	print(positions_couleurs)
+	print(t1)
+	print(t2)
     if positions_couleurs is True and (t1 - t2) > 10:
         t1 = t2
         print("marron_found")
+	continue
 
     if(positions_couleurs[0]!=1000):
         error = positions_couleurs[0]
@@ -227,8 +236,7 @@ while(True):
 
         # Dérivée
         D = Kd * (error - previous_error) / dt
-
-        # Correction totale
+ # Correction totale
         correction = P + D
 
         # Vitesses des roues

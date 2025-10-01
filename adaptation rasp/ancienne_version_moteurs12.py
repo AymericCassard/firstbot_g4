@@ -51,7 +51,7 @@ def moyenne_couleurs(img):
         moyenne_blue = sum(bleu_trouve) // len(bleu_trouve)
         #print("Moyenne bleu: ", moyenne_blue-w//2)
     else:
-        moyenne_blue=1000
+        moyenne_blue=10000
 
     #moyenne rouge
     for y in range(h//2,h//2+5):
@@ -64,7 +64,7 @@ def moyenne_couleurs(img):
         moyenne_red = sum(rouge_trouve) // len(rouge_trouve)
         #print("Moyenne rouge: ", moyenne_red-w//2)
     else:
-        moyenne_red=1000
+        moyenne_red=10000
 
     #moyenne jaune
     for y in range(h//2,h//2+5):
@@ -77,7 +77,7 @@ def moyenne_couleurs(img):
         moyenne_yellow = sum(jaune_trouve) // len(jaune_trouve)
         #print("Moyenne jaune: ", moyenne_yellow-w//2)
     else:
-        moyenne_yellow=1000
+        moyenne_yellow=10000
 
     return [moyenne_blue-w//2, moyenne_red-w//2, moyenne_yellow-w//2]
 
@@ -127,7 +127,7 @@ def moyenne_couleurs_full_image(img):
         #moyenne_blue = sum(bleu_trouve) // len(bleu_trouve)-w//2
         #print("Moyenne bleu: ", moyenne_blue-w//2)
     else:
-        moyenne_blue=1000
+        moyenne_blue=10000
 
     #moyenne rouge
     for y in range(h):
@@ -140,7 +140,7 @@ def moyenne_couleurs_full_image(img):
         moyenne_red = sum(rouge_trouve) // len(rouge_trouve)-w//2
         #print("Moyenne rouge: ", moyenne_red-w//2)
     else:
-        moyenne_red=1000
+        moyenne_red=10000
 
     #moyenne jaune
     for y in range(h):
@@ -153,7 +153,7 @@ def moyenne_couleurs_full_image(img):
         moyenne_yellow = sum(jaune_trouve) // len(jaune_trouve)-w//2
         #print("Moyenne jaune: ", moyenne_yellow-w//2)
     else:
-        moyenne_yellow=1000
+        moyenne_yellow=10000
 
     return [moyenne_blue, moyenne_red, moyenne_yellow]
 
@@ -182,8 +182,8 @@ stuck = False
 
 while(True):
 
-    if(positions_couleurs[0]<=500):
-        error = positions_couleurs[1]
+    if(positions_couleurs[2]<=1000):
+        error = positions_couleurs[2]
 
         # Proportionnelle
         P = Kp * error
