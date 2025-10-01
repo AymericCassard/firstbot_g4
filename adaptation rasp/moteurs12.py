@@ -6,7 +6,7 @@ import cv2 as cv2
 webcam = cv2.VideoCapture(0)
 
 
-def moyenne_clouleurs(img):
+def moyenne_couleurs(img):
     small = cv2.resize(img, (0,0), fx=0.10, fy=0.10, interpolation=cv2.INTER_AREA)
     cv2.imwrite("compressed.jpg", small, [cv2.IMWRITE_JPEG_QUALITY, 20])
     degraded = cv2.imread("compressed.jpg")
@@ -96,12 +96,23 @@ dxl2=2
 while(True):
     ret, frame = webcam.read()
 
-    positions_couleurs= moyenne_clouleurs(frame)
+    positions_couleurs= moyenne_couleurs(frame)
     #print(positions_couleurs)
-    dxl_io.set_moving_speed({dxl1: -100})
-    dxl_io.set_moving_speed({dxl2: 100+positions_couleurs[0]})
+    base_speed = 100  # vitesse de base
+    Kp = 2.0          # gain proportionnel (à ajuster)
 
-    #cv2.imshow('frame', frame)
+    # Exemple avec la valeur venant du suivi de couleur
+    error_blue = positions_couleurs[0] 
+
+    # Calcul des vitesses avec correction proportionnelle
+    left_speed  = - (base_speed - Kp * error_blue)
+    right_speed =   (base_speed + Kp * error_blue)
+
+    # Envoi aux moteurs
+    dxl_io.set_moving_speed({dxl1: left_speed})
+    dxl_io.set_moving_speed({dxl2: right_speed})
+
+    cv2.imshow('frame', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 webcam.release()
