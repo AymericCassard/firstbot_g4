@@ -10,7 +10,7 @@ x = 0
 y = 0
 theta = 0
 last_time = time.time()
-f = open("positions.txt", "r")
+f = open("positions.txt", "w+")
 
 def deg2rad(deg):
     return deg * np.pi / 180
@@ -56,8 +56,8 @@ def detect_path(wl, wr, dxl_io, dxl1=1, dxl2=2):
     dt = time.time() - last_time
     last_time = time.time()
     thetal, thetar = get_wheel_ang_pos(dxl_io, dxl1, dxl2)
-    wl = dxl_io.get_moving_speed([dxl1])
-    wr = dxl_io.get_moving_speed([dxl2])
+    wl = dxl_io.get_moving_speed([dxl1])[0]
+    wr = dxl_io.get_moving_speed([dxl2])[0]
     print(wl, wr)
     R, w = direct(deg2rad(wl), deg2rad(wr))
     x, y = ICR_to_coo(R, w, x, y, dt)

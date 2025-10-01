@@ -96,9 +96,12 @@ Kp = 12          # gain proportionnelcd
 Kd = 1.0        # dérivée
 dt = 0.1  # intervalle de temps entre deux mesures (en sec)
 
-tstart, t1 = time.time()
-fourcc = cv.VideoWriter_fourcc('M', 'J', 'P', 'G')
+tstart = time.time()
+t1 = tstart
+t2 = tstart
+fourcc = cv2.VideoWriter_fourcc('M', 'J', 'P', 'G')
 out = cv2.VideoWriter('output.mjpg', fourcc, 20.0, (640,  480))
+previous_error = 0
 
 while(tstart - t2 < 15):
     t2 = time.time()
