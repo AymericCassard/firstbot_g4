@@ -5,7 +5,7 @@ import turtle
 
 f = open("positions.txt", "w+")
 
-R_roue = 51.5 / 1000
+R_roue = 51.5 / 2 / 1000
 d = 135 / 1000
 last_time = time.time()
 
@@ -16,8 +16,6 @@ def rad2deg(rad):
     return rad * 180 / np.pi
 
 def direct(wl, wr):
-    if wl == wr:
-        return 0, 0
     vr = R_roue*wr
     vl = R_roue*wl
     w = (vr - vl) / d 
@@ -35,8 +33,9 @@ def ICR_to_coo(R, w, x, y, dt):
         dtheta = w*dt
     else:
         dtheta = w*dt
-        dxr = R*(np.sin(dtheta + np.pi/2) - np.sin(np.pi/2))
-        dyr = -R*(np.cos(dtheta + np.pi/2) - np.cos(np.pi/2))
+        dxr = - R*(1 - np.cos(dtheta))
+        dyr = R*(np.sin(dtheta))
+        print("dxr :", dxr, "dyr :", dyr)
     x += dxr*np.cos(dtheta) - dyr*np.sin(dtheta)
     y += dxr*np.sin(dtheta) + dyr*np.cos(dtheta)
     return x, y
@@ -47,6 +46,9 @@ def detect_path(diff_time, x, y, theta, dxl_io, dxl1=1, dxl2=2):
     last_time = time.time()
     wl = deg2rad(-1 * dxl_io.get_present_speed([dxl1])[0])
     wr = deg2rad(dxl_io.get_present_speed([dxl2])[0])
+    if wl == wr:
+        v = wl*R_roue
+        return x + v*dt*np.cos(theta), y + R_roue*wr*dt*np.sin(theta), theta
     print("wl :",rad2deg(wl),"wr :", rad2deg(wr))
     R, w = direct(wl, wr)
     print("R :",R,"w :", w)
