@@ -1,8 +1,6 @@
 import numpy as np
 import cv2
 
-
-
 img = cv2.imread("C:/Users/anton/Documents/ENSEIRB/s9/robot1/photos/finpiste1.png")
 cv2.imshow('image1',img)
 
