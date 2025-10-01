@@ -48,7 +48,8 @@ def moyenne_couleurs(img):
             if b!=0:
                 bleu_trouve.append(x)
     if(len(bleu_trouve)!=0):
-        moyenne_blue = sum(bleu_trouve) // len(bleu_trouve)-w//2
+        moyenne_blue = np.median(bleu_trouve)
+        #moyenne_blue = sum(bleu_trouve) // len(bleu_trouve)-w//2
         #print("Moyenne bleu: ", moyenne_blue-w//2)
     else:
         moyenne_blue=1000
@@ -123,7 +124,8 @@ def moyenne_couleurs_full_image(img):
             if b!=0:
                 bleu_trouve.append(x)
     if(len(bleu_trouve)!=0):
-        moyenne_blue = sum(bleu_trouve) // len(bleu_trouve)-w//2
+        moyenne_blue = np.median(bleu_trouve)
+        #moyenne_blue = sum(bleu_trouve) // len(bleu_trouve)-w//2
         #print("Moyenne bleu: ", moyenne_blue-w//2)
     else:
         moyenne_blue=1000
@@ -167,14 +169,16 @@ dxl_io.set_wheel_mode([1])
 dxl1=1
 dxl2=2
 
-base_speed = 400  # vitesse de base
-Kp = 12          # gain proportionnelcd
-Kd = 1.0        # dérivée
+base_speed = 350  # vitesse de base
+Kp = 12      # gain proportionnelcd
+Kd = 0.1      # dérivée
 dt = 0.1  # intervalle de temps entre deux mesures (en sec)
 previous_error=0
 
 ret, frame = webcam.read()
 positions_couleurs= moyenne_couleurs(frame)
+
+stuck = False
 
 while(True):
 
@@ -202,18 +206,21 @@ while(True):
 
         ret, frame = webcam.read()
         positions_couleurs= moyenne_couleurs(frame)
+        stuck=False
     else:
-        if(previous_error>0):
-            left_speed  = 100
-            right_speed = 100
-        else:
-            left_speed  = -100
-            right_speed = -100
-        dxl_io.set_moving_speed({dxl1: left_speed})
-        dxl_io.set_moving_speed({dxl2: right_speed})
+        if(stuck==True):
+            if(previous_error>0):
+                left_speed  = 100
+                right_speed = 100
+            else:
+                left_speed  = -100
+                right_speed = -100
+            dxl_io.set_moving_speed({dxl1: left_speed})
+            dxl_io.set_moving_speed({dxl2: right_speed})
 
         ret, frame = webcam.read()
         positions_couleurs= moyenne_couleurs_full_image(frame)
+        stuck=True
 
     #cv2.imshow('frame', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
