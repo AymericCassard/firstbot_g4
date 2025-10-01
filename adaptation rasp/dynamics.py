@@ -60,8 +60,8 @@ def detect_path(wl, wr, dxl_io, dxl1=1, dxl2=2):
     dt = time.time() - last_time
     last_time = time.time()
     thetal, thetar = get_wheel_ang_pos(dxl_io, dxl1, dxl2)
-    wl = deg2rad(dxl_io.get_moving_speed([dxl1])[0])
-    wr = deg2rad(dxl_io.get_moving_speed([dxl2])[0])
+    wl = deg2rad(dxl_io.get_present_speed([dxl1])[0])
+    wr = deg2rad(dxl_io.get_present_speed([dxl2])[0])
     print("wl :",rad2deg(wl),"wr :", rad2deg(wr))
     R, w = direct(wl, wr)
     print("R :",R,"w :", w)
