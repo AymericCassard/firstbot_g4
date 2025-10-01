@@ -51,7 +51,7 @@ def moyenne_couleurs(img):
         moyenne_blue = sum(bleu_trouve) // len(bleu_trouve)
         #print("Moyenne bleu: ", moyenne_blue-w//2)
     else:
-        moyenne_blue=0
+        moyenne_blue=w//2
 
     #moyenne rouge
     for y in range(h//2,h//2+5):
@@ -64,7 +64,7 @@ def moyenne_couleurs(img):
         moyenne_red = sum(rouge_trouve) // len(rouge_trouve)
         #print("Moyenne rouge: ", moyenne_red-w//2)
     else:
-        moyenne_red=0
+        moyenne_red=w//2
 
     #moyenne jaune
     for y in range(h//2,h//2+5):
@@ -77,7 +77,7 @@ def moyenne_couleurs(img):
         moyenne_yellow = sum(jaune_trouve) // len(jaune_trouve)
         #print("Moyenne jaune: ", moyenne_yellow-w//2)
     else:
-        moyenne_yellow=0
+        moyenne_yellow=w//2
 
     return [moyenne_blue-w//2, moyenne_red-w//2, moyenne_yellow-w//2]
 
