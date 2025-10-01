@@ -52,14 +52,16 @@ def ICR_to_coo(R, w, x, y, dt):
     return x, y
 
 def detect_path(wl, wr, dxl_io, dxl1=1, dxl2=2):
+    print("detect_path")
     global x, y, theta, last_time
     dt = time.time() - last_time
     last_time = time.time()
     thetal, thetar = get_wheel_ang_pos(dxl_io, dxl1, dxl2)
-    wl = dxl_io.get_moving_speed([dxl1])[0]
-    wr = dxl_io.get_moving_speed([dxl2])[0]
-    print(wl, wr)
-    R, w = direct(deg2rad(wl), deg2rad(wr))
+    wl = deg2rad(dxl_io.get_moving_speed([dxl1])[0])
+    wr = deg2rad(dxl_io.get_moving_speed([dxl2])[0])
+    print("wl :",wl,"wr :", wr)
+    R, w = direct(wl, wr)
+    print("R :",R,"w :", w)
     x, y = ICR_to_coo(R, w, x, y, dt)
     theta += w*dt
     
