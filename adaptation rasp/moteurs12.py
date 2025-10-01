@@ -98,8 +98,8 @@ while(True):
 
     positions_couleurs= moyenne_couleurs(frame)
     #print(positions_couleurs)
-    base_speed = 100  # vitesse de base
-    Kp = 2.0          # gain proportionnel (à ajuster)
+    base_speed = 300  # vitesse de base
+    Kp = 12.0          # gain proportionnel (à ajuster)
 
     # Exemple avec la valeur venant du suivi de couleur
     error_blue = positions_couleurs[0] 
@@ -112,11 +112,11 @@ while(True):
     dxl_io.set_moving_speed({dxl1: left_speed})
     dxl_io.set_moving_speed({dxl2: right_speed})
 
-    cv2.imshow('frame', frame)
+    #cv2.imshow('frame', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 webcam.release()
-cv2.destroyAllWindows()
+#cv2.destroyAllWindows()
 
 
 
