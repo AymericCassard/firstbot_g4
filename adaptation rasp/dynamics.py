@@ -16,6 +16,8 @@ def rad2deg(rad):
     return rad * 180 / np.pi
 
 def direct(wl, wr):
+    if wl == wr:
+        return 0, 0
     vr = R_roue*wr
     vl = R_roue*wl
     w = (vr - vl) / d 
