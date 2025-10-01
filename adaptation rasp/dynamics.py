@@ -56,7 +56,7 @@ def detect_path(diff_time, x, y, theta, dxl_io, dxl1=1, dxl2=2):
     print("R :",R,"w :", w)
     x, y = ICR_to_coo(R, w, x, y, dt)
     theta += w*dt
-    print("lol")
+    
     f.write(str(x)+","+str(y)+","+str(theta)+"\n")
     f.flush()
     return x,y, theta
