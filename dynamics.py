@@ -10,7 +10,7 @@ x = 0
 y = 0
 theta = 0
 last_time = time.time()
-f = open("positions.txt", "r")
+f = open("positions.txt", "w+")
 
 def deg2rad(deg):
     return deg * np.pi / 180
@@ -51,18 +51,18 @@ def ICR_to_coo(R, w, x, y, dt):
     y += dxr*np.sin(dtheta) + dyr*np.cos(dtheta)
     return x, y
 
-def detect_path(dxl_io, dxl1=1, dxl2=2):
+def detect_path(wl, wr, dxl_io, dxl1=1, dxl2=2):
     global x, y, theta, last_time
     dt = time.time() - last_time
     last_time = time.time()
-    thetal, thetar = get_wheel_ang_pos(dxl_io, dxl1, dxl2)
-    wl = thetal / dt
-    wr = thetar / dt
-    R, w = direct(wl, wr)
+    #thetal, thetar = get_wheel_ang_pos(dxl_io, dxl1, dxl2)
+    #wl = thetal / dt
+    #wr = thetar / dt
+    R, w = direct(deg2rad(wl), deg2rad(wr))
     x, y = ICR_to_coo(R, w, x, y, dt)
     theta += w*dt
     
-    f.write((x, y, theta))
+    f.write(str(x)+","+str(y)+","+str(theta)+"\n")
 
 def list_pos_to_draw():
     fenetre = turtle.Screen()

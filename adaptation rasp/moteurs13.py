@@ -129,16 +129,13 @@ while(True):
     if capture_positions :
         if time.time() - last_time > 0.1:  # Capture every 0.1 seconds
             last_time = time.time()
-            dynamics.detect_path(dxl_io, dxl1, dxl2)
+            dynamics.detect_path(left_speed, right_speed, dxl_io, dxl1, dxl2)
 
 
 webcam.release()
 #cv2.destroyAllWindows()
 
-
-
-
-
+ 
 for i in range(1):
 	dxl_io.set_moving_speed({dxl1: -500})
 	dxl_io.set_moving_speed({dxl2: 500})
