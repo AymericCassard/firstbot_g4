@@ -4,7 +4,7 @@ import turtle
 #import pypot.dynamixel
 
 f = open("positions.txt", "w+")
-
+g = open("data.txt", "w+")
 R_roue = 51.5 / 2 / 1000
 d = 135 / 1000
 last_time = time.time()
@@ -46,6 +46,8 @@ def detect_path(diff_time, x, y, theta, dxl_io, dxl1=1, dxl2=2):
     last_time = time.time()
     wl = deg2rad(-1 * dxl_io.get_present_speed([dxl1])[0])
     wr = deg2rad(dxl_io.get_present_speed([dxl2])[0])
+    g.write(str(diff_time),",",str(wl),",",str(wr),"\n")
+    
     if wl == wr:
         v = wl*R_roue
         return x + v*dt*np.cos(theta), y + R_roue*wr*dt*np.sin(theta), theta
