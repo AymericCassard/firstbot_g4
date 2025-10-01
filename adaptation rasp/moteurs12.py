@@ -92,27 +92,37 @@ dxl_io.set_wheel_mode([1])
 dxl1=1
 dxl2=2
 
+base_speed = 300  # vitesse de base
+Kp = 12          # gain proportionnelcd
+Kd = 1.0        # dérivée
+dt = 0.1  # intervalle de temps entre deux mesures (en sec)
 
 while(True):
     ret, frame = webcam.read()
 
     positions_couleurs= moyenne_couleurs(frame)
-    #print(positions_couleurs)
-    base_speed = 300  # vitesse de base
-    Kp = 12.0          # gain proportionnel (à ajuster)
+    error = positions_couleurs[0] 
 
-    # Exemple avec la valeur venant du suivi de couleur
-    error_blue = positions_couleurs[0] 
+    # Proportionnelle
+    P = Kp * error
 
-    # Calcul des vitesses avec correction proportionnelle
-    left_speed  = - (base_speed - Kp * error_blue)
-    right_speed =   (base_speed + Kp * error_blue)
+    # Dérivée
+    D = Kd * (error - previous_error) / dt
+
+    # Correction totale
+    correction = P + D
+
+    # Vitesses des roues
+    left_speed  = - (base_speed - correction)
+    right_speed =   (base_speed + correction)
 
     # Envoi aux moteurs
     dxl_io.set_moving_speed({dxl1: left_speed})
     dxl_io.set_moving_speed({dxl2: right_speed})
 
-    #cv2.imshow('frame', frame)
+    previous_error = error
+
+    cv2.imshow('frame', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 webcam.release()
