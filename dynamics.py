@@ -1,6 +1,8 @@
 import numpy as np
 import time
 import turtle
+import threading
+#import pypot.dynamixel
 
 R_roue = 51.5 / 1000
 d = 135 / 1000
@@ -8,18 +10,22 @@ x = 0
 y = 0
 theta = 0
 last_time = time.time()
-pos_list = []
+f = open("positions.txt", "r")
+
+def deg2rad(deg):
+    return deg * np.pi / 180
 
 def initialize(x0, y0, theta0):
     global x, y, theta, list_pos, last_time
     last_time = time.time()
     x = x0
     y = y0
-    list_pos = []
     theta = theta0
 
-def get_wheel_ang_pos():
-    return 0,0
+def get_wheel_ang_pos(dxl_io, dxl1, dxl2):
+    thetal = deg2rad(dxl_io.get_present_position([dxl1])[0])
+    thetar = deg2rad(dxl_io.get_present_position([dxl2])[0])
+    return thetal, thetar
 
 def direct(wl, wr):
     vr = R_roue*wr
@@ -30,32 +36,33 @@ def direct(wl, wr):
 
 def ICR_to_coo(R, w, x, y, dt):
     if w == 0:
-        dx = 0
-        dy = 0
+        dxr = 0
+        dyr = 0
         dtheta = 0
     elif R == 0:
-        dx = 0
-        dy = 0
+        dxr = 0
+        dyr = 0
         dtheta = w*dt
     else:
         dtheta = w*dt
-        dx = R*(np.sin(dtheta + np.pi/2) - np.sin(np.pi/2))
-        dy = -R*(np.cos(dtheta + np.pi/2) - np.cos(np.pi/2))
-    x += dx
-    y += dy
+        dxr = R*(np.sin(dtheta + np.pi/2) - np.sin(np.pi/2))
+        dyr = -R*(np.cos(dtheta + np.pi/2) - np.cos(np.pi/2))
+    x += dxr*np.cos(dtheta) - dyr*np.sin(dtheta)
+    y += dxr*np.sin(dtheta) + dyr*np.cos(dtheta)
     return x, y
 
-def detect_path():
+def detect_path(dxl_io, dxl1=1, dxl2=2):
     global x, y, theta, last_time
     dt = time.time() - last_time
     last_time = time.time()
-    thetal, thetar = get_wheel_ang_pos()
+    thetal, thetar = get_wheel_ang_pos(dxl_io, dxl1, dxl2)
     wl = thetal / dt
     wr = thetar / dt
     R, w = direct(wl, wr)
-    x, y = ICR_to_coo(R, w, 0, 0, dt)
+    x, y = ICR_to_coo(R, w, x, y, dt)
     theta += w*dt
-    pos_list.append((x, y, theta))
+    
+    f.write((x, y, theta))
 
 def list_pos_to_draw():
     fenetre = turtle.Screen()
@@ -68,14 +75,13 @@ def list_pos_to_draw():
     t.color("green")
     t.speed(3)
     t.clear()
-    t.penup()
-    for pos in pos_list:
-        x, y, theta = pos
+    t.pendown()
+    for line in f.readlines():
+        x_str, y_str, theta_str = line.strip().split(",")
+        x, y, theta = float(x_str), float(y_str), float(theta_str)
         t.goto(x*1000, y*1000)
-        t.pendown()
     t.penup()
     turtle.done()
-
 
 
 
