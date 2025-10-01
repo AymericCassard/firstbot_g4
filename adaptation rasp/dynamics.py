@@ -41,7 +41,7 @@ def ICR_to_coo(R, w, x, y, dt):
 
 def detect_path(diff_time, x, y, theta, dxl_io, dxl1=1, dxl2=2):
     print("########## detect_path ########## ")
-    dt = time.time() - last_time
+    dt = diff_time
     last_time = time.time()
     wl = deg2rad(-1 * dxl_io.get_present_speed([dxl1])[0])
     wr = deg2rad(dxl_io.get_present_speed([dxl2])[0])
