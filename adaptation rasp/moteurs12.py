@@ -169,9 +169,9 @@ dxl_io.set_wheel_mode([1])
 dxl1=1
 dxl2=2
 
-base_speed = 350  # vitesse de base
-Kp = 12      # gain proportionnelcd
-Kd = 0.1      # dérivée
+base_speed = 300  # vitesse de base
+Kp = 12     # gain proportionnelcd
+Kd = 0.0      # dérivée
 dt = 0.1  # intervalle de temps entre deux mesures (en sec)
 previous_error=0
 
@@ -210,11 +210,11 @@ while(True):
     else:
         if(stuck==True):
             if(previous_error>0):
-                left_speed  = 100
-                right_speed = 100
+                left_speed  = 0
+                right_speed = 0
             else:
-                left_speed  = -100
-                right_speed = -100
+                left_speed  = -0
+                right_speed = -0
             dxl_io.set_moving_speed({dxl1: left_speed})
             dxl_io.set_moving_speed({dxl2: right_speed})
 
