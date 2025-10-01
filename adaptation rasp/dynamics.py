@@ -15,6 +15,9 @@ last_time = time.time()
 def deg2rad(deg):
     return deg * np.pi / 180
 
+def rad2deg(rad):
+    return rad * 180 / np.pi
+
 def initialize(x0, y0, theta0):
     global x, y, theta, list_pos, last_time
     last_time = time.time()
@@ -59,7 +62,7 @@ def detect_path(wl, wr, dxl_io, dxl1=1, dxl2=2):
     thetal, thetar = get_wheel_ang_pos(dxl_io, dxl1, dxl2)
     wl = deg2rad(dxl_io.get_moving_speed([dxl1])[0])
     wr = deg2rad(dxl_io.get_moving_speed([dxl2])[0])
-    print("wl :",wl,"wr :", wr)
+    print("wl :",rad2deg(wl),"wr :", rad2deg(wr))
     R, w = direct(wl, wr)
     print("R :",R,"w :", w)
     x, y = ICR_to_coo(R, w, x, y, dt)
