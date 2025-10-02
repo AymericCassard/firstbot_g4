@@ -18,7 +18,7 @@ dxl1=1
 dxl2=2
 
 
-base_speed = 300  # vitesse de base
+base_speed = 200  # vitesse de base
 Kp = 12     # gain proportionnelcd
 Kd = 0.0      # dérivée
 dt = 0.1  # intervalle de temps entre deux mesures (en sec)
@@ -32,9 +32,13 @@ tmarron = time.time() + 10
 stuck = False
 
 while(True):
-    t1 = time.time()
-    print(t1)
-    print(t1 > tmarron)
+    if positions_couleurs[3] > 100:
+        print(positions_couleurs)
+        print("marron trouve")
+        dxl_io.set_moving_speed({dxl1: 0})
+        dxl_io.set_moving_speed({dxl2: 0})
+        cv2.imwrite("marron.jpg", frame)
+        break
 
     if(positions_couleurs[0]<=1000):
         error = positions_couleurs[0]
@@ -59,7 +63,7 @@ while(True):
         previous_error = error
 
         ret, frame = webcam.read()
-        positions_couleurs= moyenne_couleurs(frame)
+        positions_couleurs= couleur.moyenne_couleurs(frame)
         stuck=False
     else:
         if(stuck==True):

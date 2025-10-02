@@ -33,12 +33,11 @@ def moyenne_couleurs(img):
     mask_yellow = cv2.inRange(hsv, lower_yellow, upper_yellow)
     result_yellow = cv2.bitwise_and(degraded, degraded, mask=mask_yellow)
     #masque marron
-    upper_brown1 = np.array([179, 150, 150])
-    lower_brown2 = np.array([0, 40, 40])
-    upper_brown2 = np.array([20, 150, 150])
-    mask_brown1 = cv2.inRange(hsv, lower_brown1, upper_brown1)
-    mask_brown2 = cv2.inRange(hsv, lower_brown2, upper_brown2)
-    mask_brown = cv2.bitwise_or(mask_brown1, mask_brown2)
+    lower_brown = np.array([100, 20, 70])   # H=100, S≥20, V≥70
+    upper_brown = np.array([160, 100, 130]) # H=160, S≤100, V≤130
+
+    mask_brown = cv2.inRange(hsv, lower_brown, upper_brown)
+    result_brown = cv2.bitwise_and(degraded, degraded, mask=mask_brown)
 
     jaune_trouve=[]
     rouge_trouve=[]
@@ -128,6 +127,9 @@ def moyenne_couleurs(img):
             b, g, r = result_brown[y, x]
             if r!=0:
                 marron_trouve += 1
+    # le masque brun se confond avec le rouge
+    if(len(rouge_trouve) > marron_trouve):
+        marron_trouve = 0
 
     return [moyenne_blue-w//2, moyenne_red-w//2, moyenne_yellow-w//2, marron_trouve]
 
@@ -159,12 +161,11 @@ def moyenne_couleurs_full_image(img):
     mask_yellow = cv2.inRange(hsv, lower_yellow, upper_yellow)
     result_yellow = cv2.bitwise_and(degraded, degraded, mask=mask_yellow)
     #masque marron
-    upper_brown1 = np.array([179, 150, 150])
-    lower_brown2 = np.array([0, 40, 40])
-    upper_brown2 = np.array([20, 150, 150])
-    mask_brown1 = cv2.inRange(hsv, lower_brown1, upper_brown1)
-    mask_brown2 = cv2.inRange(hsv, lower_brown2, upper_brown2)
-    mask_brown = cv2.bitwise_or(mask_brown1, mask_brown2)
+    lower_brown = np.array([100, 20, 70])   # H=100, S≥20, V≥70
+    upper_brown = np.array([160, 100, 130]) # H=160, S≤100, V≤130
+    mask_brown = cv2.inRange(hsv, lower_brown, upper_brown)
+    result_brown = cv2.bitwise_and(degraded, degraded, mask=mask_brown)
+
 
     jaune_trouve=[]
     rouge_trouve=[]
@@ -219,5 +220,9 @@ def moyenne_couleurs_full_image(img):
             b, g, r = result_brown[y, x]
             if r!=0:
                 marron_trouve += 1
+
+    # le masque brun se confond avec le rouge
+    if(len(rouge_trouve) > marron_trouve):
+        marron_trouve = 0
 
     return [moyenne_blue, moyenne_red, moyenne_yellow, marron_trouve]
