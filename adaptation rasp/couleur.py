@@ -32,6 +32,13 @@ def moyenne_couleurs(img):
     upper_yellow = np.array([30, 255, 255])
     mask_yellow = cv2.inRange(hsv, lower_yellow, upper_yellow)
     result_yellow = cv2.bitwise_and(degraded, degraded, mask=mask_yellow)
+    #masque marron
+    upper_brown1 = np.array([179, 150, 150])
+    lower_brown2 = np.array([0, 40, 40])
+    upper_brown2 = np.array([20, 150, 150])
+    mask_brown1 = cv2.inRange(hsv, lower_brown1, upper_brown1)
+    mask_brown2 = cv2.inRange(hsv, lower_brown2, upper_brown2)
+    mask_brown = cv2.bitwise_or(mask_brown1, mask_brown2)
 
     jaune_trouve=[]
     rouge_trouve=[]
@@ -151,6 +158,13 @@ def moyenne_couleurs_full_image(img):
     upper_yellow = np.array([30, 255, 255])
     mask_yellow = cv2.inRange(hsv, lower_yellow, upper_yellow)
     result_yellow = cv2.bitwise_and(degraded, degraded, mask=mask_yellow)
+    #masque marron
+    upper_brown1 = np.array([179, 150, 150])
+    lower_brown2 = np.array([0, 40, 40])
+    upper_brown2 = np.array([20, 150, 150])
+    mask_brown1 = cv2.inRange(hsv, lower_brown1, upper_brown1)
+    mask_brown2 = cv2.inRange(hsv, lower_brown2, upper_brown2)
+    mask_brown = cv2.bitwise_or(mask_brown1, mask_brown2)
 
     jaune_trouve=[]
     rouge_trouve=[]
