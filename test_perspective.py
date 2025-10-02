@@ -6,36 +6,14 @@ import sys
 
 def manual_perspective_transform(image, pts1, pts2):
     width, height = 300, 300
-    img = cv2.imread("image_test.jpg")
+    img = image
     matrix = cv2.getPerspectiveTransform(pts1, pts2)
     result = cv2.warpPerspective(img, matrix, (width, height))
-    cv2.imwrite("output.jpg", result)
+    return result
 
 
-def correction_angle(image, angle_deg, focal_length=800):
-    h, w = image.shape[:2]
-    angle = np.deg2rad(angle_deg)
-
-    # Matrice de projection perspective
-    A1 = np.array([[1,0,-w/2],
-                   [0,1,-h/2],
-                   [0,0,1]])
-    
-    RX = np.array([[1,0,0],
-                   [0,np.cos(angle),-np.sin(angle)],
-                   [0,np.sin(angle), np.cos(angle)]])
-    
-    T = np.array([[focal_length,0,w/2],
-                  [0,focal_length,h/2],
-                  [0,0,1]])
-    
-    H = T @ RX @ A1
-    img_corr = cv2.warpPerspective(image, H, (w,h))
-    return img_corr
-
-
-pts1 = np.float32([[56,65],[368,52],[28,387],[389,390]])
-pts2 = np.float32([[0,0],[300,0],[0,300],[300,300]])
+pts1 = np.float32([(14, 416), (620, 406), (538, 64), (80, 71)])
+pts2 = np.float32([[0,0],[300,0],[300,300],[0,300]])
 
 #Stitching
 
@@ -43,6 +21,11 @@ def stitch_images(images):
     imgs = []
     for img_name in images:
         img = cv2.imread(cv2.samples.findFile(img_name))
+        cv2.imshow("Image", img)
+        cv2.waitKey(0)   # attendre une touche
+        img = manual_perspective_transform(img, pts1, pts2)
+        cv2.imshow("Image", img)
+        cv2.waitKey(0)   # attendre une touche
         if img is None:
             print("can't read image " + img_name)
             sys.exit(-1)
@@ -58,3 +41,6 @@ def stitch_images(images):
 
     #![stitching]
     cv2.imwrite("image_final.jpg", res)
+
+stitch_images(["images/image"+str(i)+".jpg" for i in range(1,100)])
+#stitch_images(["reference.jpg"])
