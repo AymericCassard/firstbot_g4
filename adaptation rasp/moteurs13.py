@@ -137,12 +137,10 @@ while(True):
         if diff_time > 0.02:  # Capture every 0.1 seconds
             last_time = time.time()
             x, y, theta = dynamics.detect_path(f, "g", diff_time, x, y, theta, dxl_io, dxl1, dxl2)
-    
-    if capture_images and camera_time + 0.1 < time.time():
-        camera_time = time.time() 
-        camera_index += 1
-        cv2.imwrite("images/image"+str(camera_index)+".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 90])
-        print("Image saved in",time.time()-camera_time,"secondes")  
+            camera_index += 1
+            cv2.imwrite("images/image"+str(camera_index)+".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 90])
+
+         
 
 
 webcam.release()

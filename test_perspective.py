@@ -21,8 +21,6 @@ def stitch_images(images):
     imgs = []
     for img_name in images:
         img = cv2.imread(cv2.samples.findFile(img_name))
-        cv2.imshow("Image", img)
-        cv2.waitKey(0)   # attendre une touche
         img = manual_perspective_transform(img, pts1, pts2)
         cv2.imshow("Image", img)
         cv2.waitKey(0)   # attendre une touche
@@ -42,5 +40,5 @@ def stitch_images(images):
     #![stitching]
     cv2.imwrite("image_final.jpg", res)
 
-stitch_images(["images/image"+str(i)+".jpg" for i in range(1,100)])
+stitch_images(["images/image"+str(i)+".jpg" for i in [25,45]])
 #stitch_images(["reference.jpg"])
