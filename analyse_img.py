@@ -7,9 +7,12 @@ import numpy as np
 # cv2.imwrite("photo.jpg", small, [cv2.IMWRITE_JPEG_QUALITY, 20])
 
 def moyenne_couleurs(img):
-    small = img
-    degraded = cv2.imread("photo.jpg")
-    #cv2.imshow("Image compressée", degraded)
+    # small = img
+    # degraded = cv2.imread("photo.jpg")
+    small = cv2.resize(img, (0,0), fx=0.10, fy=0.10, interpolation=cv2.INTER_AREA)
+    cv2.imwrite("compressed.jpg", small, [cv2.IMWRITE_JPEG_QUALITY, 20])
+    degraded = cv2.imread("compressed.jpg")
+    # #cv2.imshow("Image compressée", degraded)
 
     hsv = cv2.cvtColor(degraded, cv2.COLOR_BGR2HSV)
 
@@ -33,9 +36,23 @@ def moyenne_couleurs(img):
     mask_yellow = cv2.inRange(hsv, lower_yellow, upper_yellow)
     result_yellow = cv2.bitwise_and(degraded, degraded, mask=mask_yellow)
     # masque marron
-    lower_brown = np.array([110, 30, 60])
-    upper_brown = np.array([150, 120, 180])
-    mask_brown = cv2.inRange(hsv, lower_brown, upper_brown)
+    #OLD
+    lower_brown1 = np.array([160, 40, 40])
+    upper_brown1 = np.array([179, 150, 150])
+    lower_brown2 = np.array([0, 40, 40])
+    upper_brown2 = np.array([20, 150, 150])
+    mask_brown1 = cv2.inRange(hsv, lower_brown1, upper_brown1)
+    mask_brown2 = cv2.inRange(hsv, lower_brown2, upper_brown2)
+    mask_brown = cv2.bitwise_or(mask_brown1, mask_brown2)
+
+    # lower_brown1 = np.array([160, 30, 20])   # S et V abaissés pour inclure foncé/terne
+    # upper_brown1 = np.array([179, 200, 180]) # S et V augmentés pour inclure clair/vif
+    # lower_brown2 = np.array([0, 30, 20])
+    # upper_brown2 = np.array([20, 200, 180])
+    # mask_brown1 = cv2.inRange(hsv, lower_brown1, upper_brown1)
+    # mask_brown2 = cv2.inRange(hsv, lower_brown2, upper_brown2)
+    # mask_brown = cv2.bitwise_or(mask_brown1, mask_brown2)
+
     result_brown = cv2.bitwise_and(degraded, degraded, mask=mask_brown)
 
     jaune_trouve=[]
@@ -106,8 +123,9 @@ def moyenne_couleurs(img):
     return [moyenne_blue, moyenne_red, moyenne_yellow]
 
 img = cv2.imread("photo.jpg")
+# print(img[315][173])
 test = moyenne_couleurs(img)
-cv2.imshow("Display window", img)
-k = cv2.waitKey(0)
+# cv2.imshow("Display window", img)
+# k = cv2.waitKey(0)
 # print(test)
 

@@ -34,15 +34,19 @@ def moyenne_couleurs(img):
     mask_yellow = cv2.inRange(hsv, lower_yellow, upper_yellow)
     result_yellow = cv2.bitwise_and(degraded, degraded, mask=mask_yellow)
     # masque marron
-    lower_brown = np.array([10, 100, 20])
-    upper_brown = np.array([20, 255, 200])
-    mask_brown = cv2.inRange(hsv, lower_brown, upper_brown)
+    lower_brown1 = np.array([160, 40, 40])
+    upper_brown1 = np.array([179, 150, 150])
+    lower_brown2 = np.array([0, 40, 40])
+    upper_brown2 = np.array([20, 150, 150])
+    mask_brown1 = cv2.inRange(hsv, lower_brown1, upper_brown1)
+    mask_brown2 = cv2.inRange(hsv, lower_brown2, upper_brown2)
+    mask_brown = cv2.bitwise_or(mask_brown1, mask_brown2)
     result_brown = cv2.bitwise_and(degraded, degraded, mask=mask_brown)
 
     jaune_trouve=[]
     rouge_trouve=[]
     bleu_trouve=[]
-    marron_trouve=[]
+    marron_trouve=0
 
     h, w, c = result_blue.shape
 
@@ -90,7 +94,9 @@ def moyenne_couleurs(img):
             b, g, r = result_brown[y, x]
             print(f"Pixel ({x},{y}) = Bleu:{b}, Vert:{g}, Rouge:{r}")
             if r!=0:
-                marron_trouve.append(x)
+                marron_trouve += 1
+
+    print(f"marron_trouve: {marron_trouve}")
 
     return [moyenne_blue-w//2, moyenne_red-w//2, moyenne_yellow-w//2]
 
@@ -122,15 +128,19 @@ def moyenne_couleurs_full_image(img):
     mask_yellow = cv2.inRange(hsv, lower_yellow, upper_yellow)
     result_yellow = cv2.bitwise_and(degraded, degraded, mask=mask_yellow)
     # masque marron
-    lower_brown = np.array([10, 100, 20])
-    upper_brown = np.array([20, 255, 200])
-    mask_brown = cv2.inRange(hsv, lower_brown, upper_brown)
+    lower_brown1 = np.array([160, 40, 40])
+    upper_brown1 = np.array([179, 150, 150])
+    lower_brown2 = np.array([0, 40, 40])
+    upper_brown2 = np.array([20, 150, 150])
+    mask_brown1 = cv2.inRange(hsv, lower_brown1, upper_brown1)
+    mask_brown2 = cv2.inRange(hsv, lower_brown2, upper_brown2)
+    mask_brown = cv2.bitwise_or(mask_brown1, mask_brown2)
     result_brown = cv2.bitwise_and(degraded, degraded, mask=mask_brown)
-    marron_trouve=[]
 
     jaune_trouve=[]
     rouge_trouve=[]
     bleu_trouve=[]
+    marron_trouve=0
 
     h, w, c = result_blue.shape
 
@@ -173,13 +183,16 @@ def moyenne_couleurs_full_image(img):
         #print("Moyenne jaune: ", moyenne_yellow-w//2)
     else:
         moyenne_yellow=10000
+
     #comptage marron
     for y in range(h):
         for x in range(w):
             b, g, r = result_brown[y, x]
             print(f"Pixel ({x},{y}) = Bleu:{b}, Vert:{g}, Rouge:{r}")
             if r!=0:
-                marron_trouve.append(x)
+                marron_trouve += 1
+
+    print(f"marron_trouve: {marron_trouve}")
 
     return [moyenne_blue, moyenne_red, moyenne_yellow]
 
