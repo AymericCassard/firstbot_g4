@@ -54,10 +54,10 @@ def moyenne_couleurs(img):
             if b!=0:
                 bleu_trouve.append(x)
     if(len(bleu_trouve)!=0):
-        moyenne_blue = sum(bleu_trouve) // len(bleu_trouve)-w//2
+        moyenne_blue = sum(bleu_trouve) // len(bleu_trouve)
         #print("Moyenne bleu: ", moyenne_blue-w//2)
     else:
-        moyenne_blue=1000
+        moyenne_blue=10000
 
     #moyenne rouge
     for y in range(h//2,h//2+5):
@@ -67,10 +67,10 @@ def moyenne_couleurs(img):
             if r!=0:
                 rouge_trouve.append(x)
     if(len(rouge_trouve)!=0):
-        moyenne_red = sum(rouge_trouve) // len(rouge_trouve)-w//2
+        moyenne_red = sum(rouge_trouve) // len(rouge_trouve)
         #print("Moyenne rouge: ", moyenne_red-w//2)
     else:
-        moyenne_red=1000
+        moyenne_red=10000
 
     #moyenne jaune
     for y in range(h//2,h//2+5):
@@ -80,25 +80,19 @@ def moyenne_couleurs(img):
             if r!=0:
                 jaune_trouve.append(x)
     if(len(jaune_trouve)!=0):
-        moyenne_yellow = sum(jaune_trouve) // len(jaune_trouve)-w//2
+        moyenne_yellow = sum(jaune_trouve) // len(jaune_trouve)
         #print("Moyenne jaune: ", moyenne_yellow-w//2)
     else:
-        moyenne_yellow=1000
-
+        moyenne_yellow=10000
     #comptage marron
     for y in range(h//2,h//2+5):
         for x in range(w):
             b, g, r = result_brown[y, x]
-            #print(f"Pixel ({x},{y}) = Bleu:{b}, Vert:{g}, Rouge:{r}")
+            print(f"Pixel ({x},{y}) = Bleu:{b}, Vert:{g}, Rouge:{r}")
             if r!=0:
                 marron_trouve.append(x)
 
-    if len(marron_trouve) > len(jaune_trouve) and \
-       len(marron_trouve) > len(rouge_trouve) and \
-       len(marron_trouve) > len(bleu_trouve):
-       return True
-    else:
-        return [moyenne_blue, moyenne_red, moyenne_yellow]
+    return [moyenne_blue-w//2, moyenne_red-w//2, moyenne_yellow-w//2]
 
 def moyenne_couleurs_full_image(img):
     small = cv2.resize(img, (0,0), fx=0.10, fy=0.10, interpolation=cv2.INTER_AREA)
@@ -132,11 +126,11 @@ def moyenne_couleurs_full_image(img):
     upper_brown = np.array([20, 255, 200])
     mask_brown = cv2.inRange(hsv, lower_brown, upper_brown)
     result_brown = cv2.bitwise_and(degraded, degraded, mask=mask_brown)
+    marron_trouve=[]
 
     jaune_trouve=[]
     rouge_trouve=[]
     bleu_trouve=[]
-    marron_trouve=[]
 
     h, w, c = result_blue.shape
 
@@ -148,10 +142,11 @@ def moyenne_couleurs_full_image(img):
             if b!=0:
                 bleu_trouve.append(x)
     if(len(bleu_trouve)!=0):
-        moyenne_blue = sum(bleu_trouve) // len(bleu_trouve)-w//2
+        moyenne_blue = np.median(bleu_trouve)
+        #moyenne_blue = sum(bleu_trouve) // len(bleu_trouve)-w//2
         #print("Moyenne bleu: ", moyenne_blue-w//2)
     else:
-        moyenne_blue=1000
+        moyenne_blue=10000
 
     #moyenne rouge
     for y in range(h):
@@ -164,7 +159,7 @@ def moyenne_couleurs_full_image(img):
         moyenne_red = sum(rouge_trouve) // len(rouge_trouve)-w//2
         #print("Moyenne rouge: ", moyenne_red-w//2)
     else:
-        moyenne_red=1000
+        moyenne_red=10000
 
     #moyenne jaune
     for y in range(h):
@@ -177,22 +172,17 @@ def moyenne_couleurs_full_image(img):
         moyenne_yellow = sum(jaune_trouve) // len(jaune_trouve)-w//2
         #print("Moyenne jaune: ", moyenne_yellow-w//2)
     else:
-        moyenne_yellow=1000
-
+        moyenne_yellow=10000
     #comptage marron
     for y in range(h):
         for x in range(w):
             b, g, r = result_brown[y, x]
-            #print(f"Pixel ({x},{y}) = Bleu:{b}, Vert:{g}, Rouge:{r}")
+            print(f"Pixel ({x},{y}) = Bleu:{b}, Vert:{g}, Rouge:{r}")
             if r!=0:
                 marron_trouve.append(x)
 
-    if len(marron_trouve) > len(jaune_trouve) and \
-       len(marron_trouve) > len(rouge_trouve) and \
-       len(marron_trouve) > len(bleu_trouve):
-       return True
-    else:
-        return [moyenne_blue, moyenne_red, moyenne_yellow]
+    return [moyenne_blue, moyenne_red, moyenne_yellow]
+
 
 ports = pypot.dynamixel.get_available_ports()
 if not ports:
@@ -204,39 +194,30 @@ dxl_io.set_wheel_mode([1])
 dxl1=1
 dxl2=2
 
-base_speed = 400  # vitesse de base
-Kp = 12          # gain proportionnelcd
-Kd = 1.0        # dérivée
+
+base_speed = 300  # vitesse de base
+Kp = 12     # gain proportionnelcd
+Kd = 0.0      # dérivée
 dt = 0.1  # intervalle de temps entre deux mesures (en sec)
 previous_error=0
-target = 0 # couleur recherchee
 
 ret, frame = webcam.read()
 positions_couleurs= moyenne_couleurs(frame)
 
-t1 = time.time()
-marron_found = True
+stuck = False
+
 while(True):
-	t2 = time.time()
 
-    # on ne set pas les moteurs quand on trouve du marron
-	print(positions_couleurs)
-	print(t1)
-	print(t2)
-    if positions_couleurs is True and (t1 - t2) > 10:
-        t1 = t2
-        print("marron_found")
-	continue
-
-    if(positions_couleurs[0]!=1000):
-        error = positions_couleurs[0]
+    if(positions_couleurs[2]<=1000):
+        error = positions_couleurs[2]
 
         # Proportionnelle
         P = Kp * error
 
         # Dérivée
         D = Kd * (error - previous_error) / dt
- # Correction totale
+
+        # Correction totale
         correction = P + D
 
         # Vitesses des roues
@@ -251,18 +232,21 @@ while(True):
 
         ret, frame = webcam.read()
         positions_couleurs= moyenne_couleurs(frame)
+        stuck=False
     else:
-        if(previous_error>0):
-            left_speed  = 100
-            right_speed = 100
-        else:
-            left_speed  = -100
-            right_speed = -100
-        dxl_io.set_moving_speed({dxl1: left_speed})
-        dxl_io.set_moving_speed({dxl2: right_speed})
+        if(stuck==True):
+            if(previous_error>0):
+                left_speed  = 100
+                right_speed = 100
+            else:
+                left_speed  = -100
+                right_speed = -100
+            dxl_io.set_moving_speed({dxl1: left_speed})
+            dxl_io.set_moving_speed({dxl2: right_speed})
 
         ret, frame = webcam.read()
         positions_couleurs= moyenne_couleurs_full_image(frame)
+        stuck=True
 
     #cv2.imshow('frame', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -270,4 +254,3 @@ while(True):
     #time.sleep(0.1)
 webcam.release()
 #cv2.destroyAllWindows()
-
