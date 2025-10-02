@@ -38,7 +38,7 @@ def direct(wl, wr):
     vl = R_roue*wl
     w = (vr - vl) / d 
     R = d/2 * (vr + vl)/(vr-vl)
-    print("d :",d, "vr :",vr, "vl :",vl)
+    #print("d :",d, "vr :",vr, "vl :",vl)
     return R, w
 
 def ICR_to_coo(R, w, x, y, dt, theta):
@@ -54,14 +54,14 @@ def ICR_to_coo(R, w, x, y, dt, theta):
         dtheta = w*dt
         dxr = - R*(1 - np.cos(dtheta))
         dyr = R*(np.sin(dtheta))
-        print("dxr :", dxr, "dyr :", dyr)
+        #print("dxr :", dxr, "dyr :", dyr)
     x += dxr*np.cos(theta) - dyr*np.sin(theta)
     y += dxr*np.sin(theta) + dyr*np.cos(theta)
     return x, y
 
 def detect_path(f, g, diff_time, x, y, theta, dxl_io, dxl1=1, dxl2=2):
     
-    print("########## detect_path ########## ")
+    #print("########## detect_path ########## ")
     dt = diff_time
     wr = deg2rad(-1 * dxl_io.get_present_speed([dxl1])[0])
     wl = deg2rad(dxl_io.get_present_speed([dxl2])[0])
@@ -74,12 +74,12 @@ def detect_path(f, g, diff_time, x, y, theta, dxl_io, dxl1=1, dxl2=2):
     if wl == wr:
         v = wl*R_roue
         return x + v*dt*np.cos(theta), y + R_roue*wr*dt*np.sin(theta), theta
-    print("wl :",rad2deg(wl),"wr :", rad2deg(wr))
+    #print("wl :",rad2deg(wl),"wr :", rad2deg(wr))
     R, w = direct(wl, wr)
-    print("R :",R,"w :", w)
+    #print("R :",R,"w :", w)
     x, y = ICR_to_coo(R, w, x, y, dt, theta)
     theta += w*dt
-    print("theta :", rad2deg(theta))
+    #print("theta :", rad2deg(theta))
 
     f.write(str(x)+","+str(y)+","+str(theta)+"\n")
     f.flush()

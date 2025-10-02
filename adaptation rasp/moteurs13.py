@@ -140,8 +140,10 @@ while(True):
     if camera_time + 5 < time.time():
         camera_time = time.time() 
         camera_index += 1
+        a = time.time()
         cv2.imwrite("images/image"+str(camera_index)+".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 90])
-        print("Image saved")  
+        print("Image saved in",a-time.time(),"secondes")  
+
 
 webcam.release()
 #cv2.destroyAllWindows()
