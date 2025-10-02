@@ -100,6 +100,8 @@ dxl_io.set_wheel_mode([1])
 
 dxl1=1
 dxl2=2
+f = open("positions.txt", "w+")
+g = open("data.txt", "w+")
 
 while(True):
     if detect_line :
@@ -129,8 +131,7 @@ while(True):
         diff_time = time.time() - last_time
         if diff_time > 0.2:  # Capture every 0.1 seconds
             last_time = time.time()
-            x, y, theta = dynamics.detect_path(diff_time, x, y, theta, dxl_io, dxl1, dxl2)
-
+            x, y, theta = dynamics.detect_path(f, g, diff_time, x, y, theta, dxl_io, dxl1, dxl2)
 
 webcam.release()
 #cv2.destroyAllWindows()
@@ -143,3 +144,6 @@ for i in range(1):
 	dxl_io.set_moving_speed({dxl1: 0})
 	dxl_io.set_moving_speed({dxl2: 0})
 	time.sleep(1)
+
+f.close()
+g.close()
