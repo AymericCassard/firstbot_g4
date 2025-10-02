@@ -14,8 +14,8 @@ camera_index = 0
 x, y, theta = 0, 0, 0
 
 #BOOLEANS
-detect_line = False
-capture_positions = False
+detect_line = True
+capture_positions = True
 capture_images = True
 
 def moyenne_couleurs(img):
