@@ -93,18 +93,9 @@ def moyenne_couleurs(img):
         for x in range(w):
             b, g, r = result_brown[y, x]
             if r!=0:
-<<<<<<< HEAD
                 marron_trouve += 1
 
     print(f"marron_trouve: {marron_trouve}")
-=======
-                #print(f"Pixel ({x},{y}) = Bleu:{b}, Vert:{g}, Rouge:{r}")
-                marron_trouve.append(x)
-    if len(marron_trouve) > len(bleu_trouve) and \
-       len(marron_trouve) > len(jaune_trouve) and \
-       len(marron_trouve) > len(rouge_trouve):
-        print("marron dominant")
->>>>>>> 43de364 (trucs inutiles)
 
     return [moyenne_blue-w//2, moyenne_red-w//2, moyenne_yellow-w//2]
 
@@ -197,19 +188,9 @@ def moyenne_couleurs_full_image(img):
         for x in range(w):
             b, g, r = result_brown[y, x]
             if r!=0:
-<<<<<<< HEAD
                 marron_trouve += 1
 
     print(f"marron_trouve: {marron_trouve}")
-=======
-                #print(f"Pixel ({x},{y}) = Bleu:{b}, Vert:{g}, Rouge:{r}")
-                marron_trouve.append(x)
->>>>>>> 43de364 (trucs inutiles)
-
-    if len(marron_trouve) > len(bleu_trouve) and \
-       len(marron_trouve) > len(jaune_trouve) and \
-       len(marron_trouve) > len(rouge_trouve):
-        print("marron dominant")
 
     return [moyenne_blue, moyenne_red, moyenne_yellow]
 
