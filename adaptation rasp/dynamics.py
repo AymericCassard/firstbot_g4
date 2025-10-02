@@ -7,6 +7,26 @@ R_roue = 51.5 / 2 / 1000
 d = 135 / 1000
 last_time = time.time()
 
+"""data_f = open("data.txt", "r")
+x_list, y_list = [], []
+
+data = []
+data_index = 0
+for line in data_f.readlines():
+    time_diff, v1, v2 = line.strip().split(",")
+    time_diff, v1,v2 = float(time_diff), float(v1), float(v2)
+    data.append([time_diff, v1, v2])
+
+def next_data():
+    global data_index
+    data_value = data[data_index]
+    data_index += 1
+    if data_index >= len(data) :
+        print("bonjour")
+        exit()
+    return data_value
+""" 
+
 def deg2rad(deg):
     return deg * np.pi / 180
 
@@ -18,9 +38,10 @@ def direct(wl, wr):
     vl = R_roue*wl
     w = (vr - vl) / d 
     R = d/2 * (vr + vl)/(vr-vl)
+    print("d :",d, "vr :",vr, "vl :",vl)
     return R, w
 
-def ICR_to_coo(R, w, x, y, dt):
+def ICR_to_coo(R, w, x, y, dt, theta):
     if w == 0:
         dxr = 0
         dyr = 0
@@ -34,18 +55,21 @@ def ICR_to_coo(R, w, x, y, dt):
         dxr = - R*(1 - np.cos(dtheta))
         dyr = R*(np.sin(dtheta))
         print("dxr :", dxr, "dyr :", dyr)
-    x += dxr*np.cos(dtheta) - dyr*np.sin(dtheta)
-    y += dxr*np.sin(dtheta) + dyr*np.cos(dtheta)
+    x += dxr*np.cos(theta) - dyr*np.sin(theta)
+    y += dxr*np.sin(theta) + dyr*np.cos(theta)
     return x, y
 
 def detect_path(f, g, diff_time, x, y, theta, dxl_io, dxl1=1, dxl2=2):
-
+    
     print("########## detect_path ########## ")
     dt = diff_time
-    wl = deg2rad(-1 * dxl_io.get_present_speed([dxl1])[0])
-    wr = deg2rad(dxl_io.get_present_speed([dxl2])[0])
-    g.write(str(diff_time)+","+str(wl)+","+str(wr)+"\n")
-    g.flush()
+    wr = deg2rad(-1 * dxl_io.get_present_speed([dxl1])[0])
+    wl = deg2rad(dxl_io.get_present_speed([dxl2])[0])
+    #g.write(str(diff_time)+","+str(wl)+","+str(wr)+"\n")
+    #g.flush()
+
+    #data_values = next_data()
+    #dt, wr, wl = data_values[0], data_values[1], data_values[2]
     
     if wl == wr:
         v = wl*R_roue
@@ -53,8 +77,9 @@ def detect_path(f, g, diff_time, x, y, theta, dxl_io, dxl1=1, dxl2=2):
     print("wl :",rad2deg(wl),"wr :", rad2deg(wr))
     R, w = direct(wl, wr)
     print("R :",R,"w :", w)
-    x, y = ICR_to_coo(R, w, x, y, dt)
+    x, y = ICR_to_coo(R, w, x, y, dt, theta)
     theta += w*dt
+    print("theta :", rad2deg(theta))
 
     f.write(str(x)+","+str(y)+","+str(theta)+"\n")
     f.flush()
