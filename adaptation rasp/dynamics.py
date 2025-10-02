@@ -3,6 +3,9 @@ import time
 import turtle
 #import pypot.dynamixel
 
+f = open("positions.txt", "w+")
+g = open("data.txt", "w+")
+
 R_roue = 51.5 / 2 / 1000
 d = 135 / 1000
 last_time = time.time()
@@ -39,8 +42,6 @@ def ICR_to_coo(R, w, x, y, dt):
     return x, y
 
 def detect_path(diff_time, x, y, theta, dxl_io, dxl1=1, dxl2=2):
-    f = open("positions.txt", "w+")
-    g = open("data.txt", "w+")
 
     print("########## detect_path ########## ")
     dt = diff_time
@@ -61,9 +62,8 @@ def detect_path(diff_time, x, y, theta, dxl_io, dxl1=1, dxl2=2):
     f.write(str(x)+","+str(y)+","+str(theta)+"\n")
     f.flush()
 
-    f.close()
-    g.close()
     return x,y, theta
 
-
+f.close()
+g.close()
     
