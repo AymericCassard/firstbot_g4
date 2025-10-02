@@ -14,9 +14,9 @@ camera_index = 0
 x, y, theta = 0, 0, 0
 
 #BOOLEANS
-detect_line = True
-capture_positions = True
-
+detect_line = False
+capture_positions = False
+capture_images = True
 
 def moyenne_couleurs(img):
     small = cv2.resize(img, (0,0), fx=0.10, fy=0.10, interpolation=cv2.INTER_AREA)
@@ -94,22 +94,23 @@ def moyenne_couleurs(img):
     return [moyenne_blue-w//2, moyenne_red-w//2, moyenne_yellow-w//2]
 
 
-if detect_line :
-    ports = pypot.dynamixel.get_available_ports()
-    if not ports:
-        exit('No port')
+ports = pypot.dynamixel.get_available_ports()
+if not ports:
+    exit('No port')
 
-    dxl_io = pypot.dynamixel.DxlIO(ports[0])
-    dxl_io.set_wheel_mode([1])
+dxl_io = pypot.dynamixel.DxlIO(ports[0])
+dxl_io.set_wheel_mode([1])
 
-    dxl1=1
-    dxl2=2
+dxl1=1
+dxl2=2
+
+dxl_io.disable_torque([1, 2])
 
 #g = open("data.txt", "w+")
 
 while(True):
+    ret, frame = webcam.read()
     if detect_line :
-        ret, frame = webcam.read()
 
         positions_couleurs= moyenne_couleurs(frame)
         #print(positions_couleurs)
@@ -137,7 +138,7 @@ while(True):
             last_time = time.time()
             x, y, theta = dynamics.detect_path(f, "g", diff_time, x, y, theta, dxl_io, dxl1, dxl2)
     
-    if camera_time + 0.5 < time.time():
+    if capture_images and camera_time + 0.1 < time.time():
         camera_time = time.time() 
         camera_index += 1
         cv2.imwrite("images/image"+str(camera_index)+".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 90])

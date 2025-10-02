@@ -92,11 +92,19 @@ def moyenne_couleurs(img):
     for y in range(h//2,h//2+5):
         for x in range(w):
             b, g, r = result_brown[y, x]
-            print(f"Pixel ({x},{y}) = Bleu:{b}, Vert:{g}, Rouge:{r}")
             if r!=0:
+<<<<<<< HEAD
                 marron_trouve += 1
 
     print(f"marron_trouve: {marron_trouve}")
+=======
+                #print(f"Pixel ({x},{y}) = Bleu:{b}, Vert:{g}, Rouge:{r}")
+                marron_trouve.append(x)
+    if len(marron_trouve) > len(bleu_trouve) and \
+       len(marron_trouve) > len(jaune_trouve) and \
+       len(marron_trouve) > len(rouge_trouve):
+        print("marron dominant")
+>>>>>>> 43de364 (trucs inutiles)
 
     return [moyenne_blue-w//2, moyenne_red-w//2, moyenne_yellow-w//2]
 
@@ -188,11 +196,20 @@ def moyenne_couleurs_full_image(img):
     for y in range(h):
         for x in range(w):
             b, g, r = result_brown[y, x]
-            print(f"Pixel ({x},{y}) = Bleu:{b}, Vert:{g}, Rouge:{r}")
             if r!=0:
+<<<<<<< HEAD
                 marron_trouve += 1
 
     print(f"marron_trouve: {marron_trouve}")
+=======
+                #print(f"Pixel ({x},{y}) = Bleu:{b}, Vert:{g}, Rouge:{r}")
+                marron_trouve.append(x)
+>>>>>>> 43de364 (trucs inutiles)
+
+    if len(marron_trouve) > len(bleu_trouve) and \
+       len(marron_trouve) > len(jaune_trouve) and \
+       len(marron_trouve) > len(rouge_trouve):
+        print("marron dominant")
 
     return [moyenne_blue, moyenne_red, moyenne_yellow]
 
@@ -221,8 +238,8 @@ stuck = False
 
 while(True):
 
-    if(positions_couleurs[2]<=1000):
-        error = positions_couleurs[2]
+    if(positions_couleurs[0]<=1000):
+        error = positions_couleurs[0]
 
         # Proportionnelle
         P = Kp * error
