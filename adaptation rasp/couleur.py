@@ -36,6 +36,7 @@ def moyenne_couleurs(img):
     jaune_trouve=[]
     rouge_trouve=[]
     bleu_trouve=[]
+    marron_trouve=0
 
     h, w, c = result_blue.shape
 
@@ -114,7 +115,14 @@ def moyenne_couleurs(img):
     else:
         moyenne_yellow=10000
 
-    return [moyenne_blue-w//2, moyenne_red-w//2, moyenne_yellow-w//2]
+    #comptage marron
+    for y in range(h//2,h//2+5):
+        for x in range(w):
+            b, g, r = result_brown[y, x]
+            if r!=0:
+                marron_trouve += 1
+
+    return [moyenne_blue-w//2, moyenne_red-w//2, moyenne_yellow-w//2, marron_trouve]
 
 def moyenne_couleurs_full_image(img):
     small = cv2.resize(img, (0,0), fx=0.10, fy=0.10, interpolation=cv2.INTER_AREA)
@@ -147,6 +155,7 @@ def moyenne_couleurs_full_image(img):
     jaune_trouve=[]
     rouge_trouve=[]
     bleu_trouve=[]
+    marron_trouve=0
 
     h, w, c = result_blue.shape
 
@@ -190,4 +199,11 @@ def moyenne_couleurs_full_image(img):
     else:
         moyenne_yellow=10000
 
-    return [moyenne_blue, moyenne_red, moyenne_yellow]
+    #comptage marron
+    for y in range(h):
+        for x in range(w):
+            b, g, r = result_brown[y, x]
+            if r!=0:
+                marron_trouve += 1
+
+    return [moyenne_blue, moyenne_red, moyenne_yellow, marron_trouve]
