@@ -8,12 +8,7 @@ import sys
 
 webcam = cv2.VideoCapture(0)
 
-print("(0 = jaune, 1 = bleu , 2 = rouge)")
-target = input("")
 
-if not target.isdigit():
-    exit("target incorrect")
-target = int(target)
 
 if len(sys.argv) < 2:
     print("Usage: python3 mon_script.py <argument>")
@@ -25,10 +20,19 @@ if argument == "follow_line":
     capture_positions = True
     capture_images = True
 
+    print("(0 = jaune, 1 = bleu , 2 = rouge)")
+    target = input("")
+
+    if not target.isdigit():
+        exit("target incorrect")
+    target = int(target)
+
+
 if argument == "free_ride":
     follow_line = False
     capture_positions = True
     capture_images = True
+    target = 0
 
 
 #VARIABLE
