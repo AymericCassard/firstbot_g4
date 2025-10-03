@@ -10,6 +10,7 @@ webcam = cv2.VideoCapture(0)
 
 
 #VARIABLE
+camera_time = time.time()
 last_time = time.time()
 f = open("positions.txt", "w+")
 x, y, theta = 0, 0, 0
