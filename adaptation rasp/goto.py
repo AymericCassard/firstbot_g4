@@ -123,6 +123,8 @@ def bezier_curve(control_points, n_points=100):
 def goto_bezier_no_audom(x0,y0, x1,y1, x2,y2, x3,y3, temps_deplacement=1):
 
     #ctrl = [(0, 0), (1, 0), (0.75, 0.98), (0.5, 0.5)]
+
+
     ctrl = [(x0, y0), (x1, y1), (x2, y2), (x3, y3)]
     traj = bezier_curve(ctrl, n_points=10)
 
@@ -146,9 +148,13 @@ def goto_bezier_no_audom(x0,y0, x1,y1, x2,y2, x3,y3, temps_deplacement=1):
     dxl_io.set_moving_speed({dxl1: 0})
     dxl_io.set_moving_speed({dxl2: 0})
 
-def goto_bezier_audom():
+def goto_bezier_audom(x0,y0, x1,y1, x2,y2, x3,y3, temps_deplacement=1):
 
     f = open("positions_goto.txt", "w+")
+
+
+    ctrl = [(x0, y0), (x1, y1), (x2, y2), (x3, y3)]
+    traj = bezier_curve(ctrl, n_points=10)
 
     temps_deplacement = 1
     last_time = time.time()
@@ -197,8 +203,12 @@ def goto_bezier_audom():
 
 print("Pret")
 
+goto_bezier_audom(0,0,0.48,0.004,0.484,1.01,1,1)
+
 dxl_io.set_moving_speed({dxl1: 0})
 dxl_io.set_moving_speed({dxl2: 0})
+
+
 
 if len(sys.argv) < 2:
     print("Usage: python3 mon_script.py <argument>")
@@ -232,6 +242,16 @@ if argument == "bezier_no_odom":
     print(liste_entree)
 
     goto_bezier_no_audom(liste_entree[0], liste_entree[1], liste_entree[2], liste_entree[3], liste_entree[4], liste_entree[5], liste_entree[6], liste_entree[7], liste_entree[8])
+    dxl_io.set_moving_speed({dxl1: 0})
+    dxl_io.set_moving_speed({dxl2: 0})
+
+if argument == "bezier_odom":
+    entree = input("Entrée (x0,y0, x1,y1, x2,y2, x3,y3, temps_deplacement): ")
+    liste_entree = entree.split(",")
+    liste_entree = [float(ent) for ent in liste_entree]
+    print(liste_entree)
+
+    goto_bezier_audom(liste_entree[0], liste_entree[1], liste_entree[2], liste_entree[3], liste_entree[4], liste_entree[5], liste_entree[6], liste_entree[7], liste_entree[8])
     dxl_io.set_moving_speed({dxl1: 0})
     dxl_io.set_moving_speed({dxl2: 0})
 
