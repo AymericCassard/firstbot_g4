@@ -6,6 +6,9 @@ import numpy as np
 import cv2 as cv2
 webcam = cv2.VideoCapture(0)
 
+target = input()
+if not target.isdigit():
+    exit("target incorrect")
 
 ports = pypot.dynamixel.get_available_ports()
 if not ports:
@@ -17,14 +20,13 @@ dxl_io.set_wheel_mode([1])
 dxl1=1
 dxl2=2
 
-
+target = int(target)
 base_speed = 200  # vitesse de base
 Kp = 12     # gain proportionnelcd
 Kd = 0.0      # dérivée
 dt = 0.1  # intervalle de temps entre deux mesures (en sec)
 previous_error=0
 # 0 = yellow, 1 = blue , 2 = red
-target = 0
 
 ret, frame = webcam.read()
 positions_couleurs= couleur.moyenne_couleurs(frame)
@@ -44,6 +46,10 @@ while(True):
 #        target += 1
 #        tmarron = time.time() + 15
 #        #if target > 0:
+    if target > 3:
+        dxl_io.set_moving_speed({dxl1: 0})
+        dxl_io.set_moving_speed({dxl2: 0})
+        break
       
     if(positions_couleurs[target]<=1000):
         error = positions_couleurs[target]
