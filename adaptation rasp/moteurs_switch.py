@@ -24,7 +24,7 @@ Kd = 0.0      # dérivée
 dt = 0.1  # intervalle de temps entre deux mesures (en sec)
 previous_error=0
 # 0 = blue, 1 = red , 2 = yellow
-target = 0
+target = 1
 
 ret, frame = webcam.read()
 positions_couleurs= couleur.moyenne_couleurs(frame)
@@ -34,7 +34,7 @@ tmarron = time.time() + 0
 stuck = False
 
 while(True):
-    if positions_couleurs[3] > 40 and tmarron < time.time():
+    if positions_couleurs[3] > 10 and tmarron < time.time():
         print(positions_couleurs)
         print("marron trouve")
         dxl_io.set_moving_speed({dxl1: 0})
@@ -43,9 +43,8 @@ while(True):
         break
         target += 1
         tmarron = time.time() + 15
-        if target > 0:
-            break
-
+        #if target > 0:
+      
     if(positions_couleurs[target]<=1000):
         error = positions_couleurs[target]
 

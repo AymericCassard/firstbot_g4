@@ -48,8 +48,8 @@ def moyenne_couleurs(img):
     result_yellow = cv2.bitwise_and(degraded, degraded, mask=mask_yellow)
 
     #masque marron
-    lower_brown = np.array([110, 20, 70])   # H min, S faible mais pas nul, V bas
-    upper_brown = np.array([160, 80, 130])  # H max, S modérée, V limité
+    lower_brown = np.array([120, 20, 55])   # H min, S min, V min
+    upper_brown = np.array([150, 60, 95])   # H max, S max, V max
     mask_brown = cv2.inRange(hsv, lower_brown, upper_brown)
 
     result_brown = cv2.bitwise_and(degraded, degraded, mask=mask_brown)
@@ -177,24 +177,9 @@ def moyenne_couleurs_full_image(img):
     mask_yellow = cv2.inRange(hsv, lower_yellow, upper_yellow)
     result_yellow = cv2.bitwise_and(degraded, degraded, mask=mask_yellow)
     #masque marron
-    lower_brown1=np.array([0, 8, 56])#H=100–160, Sfaible-moyenne, Vbas
-    upper_brown1=np.array([4, 140, 140])
-    mask_brown1=cv2.inRange(hsv, lower_brown1, upper_brown1)
-    
-    #masque marron
-    lower_brown1=np.array([0, 8, 56])#H=100–160, Sfaible-moyenne, Vbas
-    upper_brown1=np.array([4, 140, 140])
-    mask_brown1=cv2.inRange(hsv, lower_brown1, upper_brown1)
-    
-    #Marron-grismoyen
-    lower_brown2=np.array([147, 8, 156])
-    upper_brown2=np.array([178, 140, 140])
-    
-    mask_brown2=cv2.inRange(hsv, lower_brown2, upper_brown2)
-
-    mask_brown = cv2.bitwise_or(mask_brown1, mask_brown2)
-    # Eviter les pixels rouges
-    mask_brown = cv2.bitwise_and(mask_brown, cv2.bitwise_xor(mask_brown, mask_red))
+    lower_brown = np.array([120, 20, 55])   # H min, S min, V min
+    upper_brown = np.array([150, 60, 95])   # H max, S max, V max
+    mask_brown = cv2.inRange(hsv, lower_brown, upper_brown)
     result_brown = cv2.bitwise_and(degraded, degraded, mask=mask_brown)
 
     jaune_trouve=[]

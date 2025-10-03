@@ -110,7 +110,7 @@ def bezier_curve(control_points, n_points=100):
     # Conversion en liste de tuples
     return [tuple(pt) for pt in curve]
 
-ctrl = [(0, 0), (0.6, 0), (0.1, 0.6), (0.7, 0.6)]
+ctrl = [(0, 0), (1, 0), (0.75, 0.98), (0.5, 0.5)]
 traj = bezier_curve(ctrl, n_points=10)
 
 #goto_egocentrique(0.2,0.2, 5)
@@ -118,7 +118,7 @@ traj = bezier_curve(ctrl, n_points=10)
 
 def goto_bezier_no_audom():
 
-    temps_deplacement = 0.1
+    temps_deplacement = 1
     last_time = time.time()
 
     for k in range(len(traj)-1):
