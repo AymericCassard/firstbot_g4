@@ -31,7 +31,7 @@ def rotate_good(image, theta):
     (h, w) = image.shape[:2]
     M = cv2.getRotationMatrix2D((w//2, h//2), theta, 1.0) #theta sens horaire
 
-    # Rotation (la taille reste la même, coins coupés possible)
+    # Rotation (
     rotated = cv2.warpAffine(image, M, (w, h), borderMode=cv2.BORDER_CONSTANT, borderValue=(0,0,0,0))
     return rotated
 
@@ -63,8 +63,8 @@ def image_to_pixel():
         if i%1 == 0:
             print(f"Image {i+1}/{len(images)}")
             image  = rotate_good(image, theta*180/np.pi)
-            cv2.imshow("Image", image)
-            cv2.waitKey(200)
+            #cv2.imshow("Image", image)
+            #cv2.waitKey(200)
             x, y, theta = coo_to_reel_coo(x, y, theta)
             x_robot_pixel = x * mm_to_pixel
             y_robot_pixel = y * mm_to_pixel

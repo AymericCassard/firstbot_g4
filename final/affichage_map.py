@@ -54,17 +54,17 @@ def paste(img, canva, x_center, y_center):
 def image_to_pixel():
     canva = np.ones((height, width, 3), dtype=np.uint8) * 255
     for i, (image, (x, y, theta)) in enumerate(zip(images, coos)):
-        print("theta :",theta/np.pi*180)
+        #print("theta :",theta/np.pi*180)
         if i > 0 :
             vx = coos[i][0] - coos[i-1][0]
             vy = coos[i][1] - coos[i-1][1]
             theta = math.atan2(vy, vx)
-        print("estimation theta:", theta/np.pi*180)
-        if i%1 == 0:
+        #print("estimation theta:", theta/np.pi*180)
+        if i%2 == 0:
             print(f"Image {i+1}/{len(images)}")
             image  = rotate_good(image, theta*180/np.pi)
-            cv2.imshow("Image", image)
-            cv2.waitKey(200)
+            #cv2.imshow("Image", image)
+            #cv2.waitKey(200)
             x, y, theta = coo_to_reel_coo(x, y, theta)
             x_robot_pixel = x * mm_to_pixel
             y_robot_pixel = y * mm_to_pixel
