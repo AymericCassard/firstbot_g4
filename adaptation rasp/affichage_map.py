@@ -60,7 +60,7 @@ def image_to_pixel():
             vy = coos[i][1] - coos[i-1][1]
             theta = math.atan2(vy, vx)
         print("estimation theta:", theta/np.pi*180)
-        if i%10 == 0:
+        if i%1 == 0:
             print(f"Image {i+1}/{len(images)}")
             image  = rotate_good(image, theta*180/np.pi)
             cv2.imshow("Image", image)

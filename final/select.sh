@@ -11,11 +11,11 @@ NOM="$1"
 case "$NOM" in
     "suivi_ligne")
         echo "Lancement du suivi de ligne"
-        python3 suivi_ligne.py "suivi_line"
+        python3 suivi_ligne.py follow_line
         ;;
     "free_ride")
         echo "Lancement du suivi de ligne"
-        python3 suivi_ligne.py
+        python3 suivi_ligne.py free_ride
         ;;
     "goto")
         echo "Lancement du goto"

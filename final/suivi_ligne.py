@@ -4,9 +4,24 @@ import dynamics
 import numpy as np
 import cv2 as cv2
 import couleur
+import sys
 
 webcam = cv2.VideoCapture(0)
 
+if len(sys.argv) < 2:
+    print("Usage: python3 mon_script.py <argument>")
+    sys.exit(1)
+
+argument = sys.argv[1]
+if argument == "follow_line":
+    follow_line = True
+    capture_positions = True
+    capture_images = True
+
+if argument == "free_ride":
+    follow_line = False
+    capture_positions = True
+    capture_images = True
 
 
 #VARIABLE
@@ -17,9 +32,7 @@ camera_index = 0
 x, y, theta = 0, 0, 0
 
 #BOOLEANS
-follow_line = False
-capture_positions = True
-capture_images = True
+
 
 #Initalisation moteurs
 
