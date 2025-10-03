@@ -118,14 +118,8 @@ def bezier_curve(control_points, n_points=100):
 #goto_egocentrique(0.2,0.2, 5)
 #goto_absolu(1, 1, 45, 2, 2, 5)
 
-<<<<<<< HEAD
-def goto_bezier_no_audom(x0,y0, x1,y1, x2,y2, x3,y3, temps_deplacement=1):
-=======
-def goto_bezier_no_audom(ctrl):
 
-    #ctrl = [(0, 0), (1, 0), (0.75, 0.98), (0.5, 0.5)]
-    traj = bezier_curve(ctrl, n_points=10)
->>>>>>> b9c49ec388d976dc08edd61644b48bd22495fdf1
+def goto_bezier_no_audom(x0,y0, x1,y1, x2,y2, x3,y3, temps_deplacement=1):
 
     f = open("positions_goto.txt", "w+")
 
@@ -153,16 +147,10 @@ def goto_bezier_no_audom(ctrl):
     dxl_io.set_moving_speed({dxl1: 0})
     dxl_io.set_moving_speed({dxl2: 0})
 
-<<<<<<< HEAD
     f.close()
 
 def goto_bezier_audom(x0,y0, x1,y1, x2,y2, x3,y3, temps_deplacement=1):
-=======
-def goto_bezier_audom(ctrl):
 
-    #ctrl = [(0, 0), (1, 0), (0.75, 0.98), (0.5, 0.5)]
-    traj = bezier_curve(ctrl, n_points=10)
->>>>>>> b9c49ec388d976dc08edd61644b48bd22495fdf1
 
     f = open("positions_goto.txt", "w+")
 
