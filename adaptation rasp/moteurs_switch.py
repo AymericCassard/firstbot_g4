@@ -23,8 +23,8 @@ Kp = 12     # gain proportionnelcd
 Kd = 0.0      # dérivée
 dt = 0.1  # intervalle de temps entre deux mesures (en sec)
 previous_error=0
-# 0 = blue, 1 = red , 2 = yellow
-target = 1
+# 0 = yellow, 1 = blue , 2 = red
+target = 0
 
 ret, frame = webcam.read()
 positions_couleurs= couleur.moyenne_couleurs(frame)
@@ -34,16 +34,16 @@ tmarron = time.time() + 0
 stuck = False
 
 while(True):
-    if positions_couleurs[3] > 10 and tmarron < time.time():
-        print(positions_couleurs)
-        print("marron trouve")
-        dxl_io.set_moving_speed({dxl1: 0})
-        dxl_io.set_moving_speed({dxl2: 0})
-        cv2.imwrite("marron.jpg", frame)
-        break
-        target += 1
-        tmarron = time.time() + 15
-        #if target > 0:
+#    if positions_couleurs[3] > 10 and tmarron < time.time():
+#        print(positions_couleurs)
+#        print("marron trouve")
+#        dxl_io.set_moving_speed({dxl1: 0})
+#        dxl_io.set_moving_speed({dxl2: 0})
+#        cv2.imwrite("marron.jpg", frame)
+#        break
+#        target += 1
+#        tmarron = time.time() + 15
+#        #if target > 0:
       
     if(positions_couleurs[target]<=1000):
         error = positions_couleurs[target]
