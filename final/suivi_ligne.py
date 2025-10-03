@@ -31,9 +31,6 @@ f = open("positions.txt", "w+")
 camera_index = 0
 x, y, theta = 0, 0, 0
 
-#BOOLEANS
-
-
 #Initalisation moteurs
 
 ports = pypot.dynamixel.get_available_ports()
