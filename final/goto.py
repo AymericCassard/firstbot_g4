@@ -7,8 +7,6 @@ import math
 import dynamics
 import sys
 
-
-
 ports = pypot.dynamixel.get_available_ports()
 if not ports:
     exit('No port')
@@ -70,6 +68,8 @@ def goto_egocentrique(xr,yr,temps_deplacement): #([m], [m], [s])
 
     theta_robot += dtheta
 
+
+
 def goto_absolu(x0, y0, theta0, x1, y1, temps_deplacement): #([m], [m], [deg], [m], [m], [s])
 
     #theta0 = thetadeg0*np.pi/180
@@ -84,9 +84,9 @@ def goto_absolu(x0, y0, theta0, x1, y1, temps_deplacement): #([m], [m], [deg], [
     xr = costheta*(x1-x0)+sintheta*(y1-y0)
     yr = -sintheta*(x1-x0)+costheta*(y1-y0)
 
-
-
     goto_egocentrique(xr,yr,temps_deplacement)
+
+
 
 def bezier_curve(control_points, n_points=100):
     """
@@ -117,7 +117,6 @@ def bezier_curve(control_points, n_points=100):
 
 #goto_egocentrique(0.2,0.2, 5)
 #goto_absolu(1, 1, 45, 2, 2, 5)
-
 
 def goto_bezier_no_audom(x0,y0, x1,y1, x2,y2, x3,y3, temps_deplacement=1):
 
@@ -150,7 +149,6 @@ def goto_bezier_no_audom(x0,y0, x1,y1, x2,y2, x3,y3, temps_deplacement=1):
     f.close()
 
 def goto_bezier_audom(x0,y0, x1,y1, x2,y2, x3,y3, temps_deplacement=1):
-
 
     f = open("positions_goto.txt", "w+")
 
@@ -251,5 +249,3 @@ if argument == "bezier_odom":
     goto_bezier_audom(liste_entree[0], liste_entree[1], liste_entree[2], liste_entree[3], liste_entree[4], liste_entree[5], liste_entree[6], liste_entree[7], liste_entree[8])
     dxl_io.set_moving_speed({dxl1: 0})
     dxl_io.set_moving_speed({dxl2: 0})
-
-
