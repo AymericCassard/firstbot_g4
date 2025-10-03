@@ -7,19 +7,20 @@ import couleur
 
 def crop_img(img):
     #print(f"img shape: {img.shape}")
-    y1 = int(img.shape[0] * 0.75)
-    y2 = img.shape[0]
-    x1 = int(img.shape[1] * 0.25)
-    x2 = int(img.shape[1] * 0.75)
-    cropped = img[y1:y2, x1:x2]
-    name = "no_led/cropped_no_led" + str(img[0, 0]) + ".jpg"
-    cv2.imwrite(name, cropped)
+    #y1 = int(img.shape[0] * 0.75)
+    #y2 = img.shape[0]
+    x1 = int(img.shape[1] * 0.5)
+    x2 = int(img.shape[1] * 1)
+    cropped = img[:, x1:x2]
+    #name = "no_led/cropped_no_led" + str(img[0, 0]) + ".jpg"
+    #cv2.imwrite(name, cropped)
     #cv2.imwrite("original.jpg", img)
     #print(f"cropped shape: {cropped.shape}")
     return cropped
 
-def moyenne_couleurs(img):
-    #img = crop_img(img)
+def moyenne_couleurs(img, isCropped):
+    if isCropped:
+        img = crop_img(img)
     small = cv2.resize(img, (0,0), fx=0.10, fy=0.10, interpolation=cv2.INTER_AREA)
     cv2.imwrite("compressed.jpg", small, [cv2.IMWRITE_JPEG_QUALITY, 20])
     degraded = cv2.imread("compressed.jpg")
@@ -148,8 +149,9 @@ def moyenne_couleurs(img):
 
     return [moyenne_yellow-w//2, moyenne_blue-w//2, moyenne_red-w//2, marron_trouve]
 
-def moyenne_couleurs_full_image(img):
-    #img = crop_img(img)
+def moyenne_couleurs_full_image(img, isCropped):
+    if isCropped:
+        img = crop_img(img)
     small = cv2.resize(img, (0,0), fx=0.10, fy=0.10, interpolation=cv2.INTER_AREA)
     cv2.imwrite("compressed.jpg", small, [cv2.IMWRITE_JPEG_QUALITY, 20])
     degraded = cv2.imread("compressed.jpg")

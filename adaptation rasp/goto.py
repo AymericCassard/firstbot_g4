@@ -5,6 +5,9 @@ import numpy as np
 #import cv2 as cv2
 import math
 import dynamics
+import sys
+
+
 
 ports = pypot.dynamixel.get_available_ports()
 if not ports:
@@ -67,6 +70,8 @@ def goto_egocentrique(xr,yr,temps_deplacement): #([m], [m], [s])
 
     theta_robot += dtheta
 
+
+
 def goto_absolu(x0, y0, theta0, x1, y1, temps_deplacement): #([m], [m], [deg], [m], [m], [s])
 
     #theta0 = thetadeg0*np.pi/180
@@ -81,9 +86,9 @@ def goto_absolu(x0, y0, theta0, x1, y1, temps_deplacement): #([m], [m], [deg], [
     xr = costheta*(x1-x0)+sintheta*(y1-y0)
     yr = -sintheta*(x1-x0)+costheta*(y1-y0)
 
-
-
     goto_egocentrique(xr,yr,temps_deplacement)
+
+
 
 def bezier_curve(control_points, n_points=100):
     """
@@ -110,15 +115,18 @@ def bezier_curve(control_points, n_points=100):
     # Conversion en liste de tuples
     return [tuple(pt) for pt in curve]
 
-ctrl = [(0, 0), (1, 0), (0.75, 0.98), (0.5, 0.5)]
-traj = bezier_curve(ctrl, n_points=10)
+
 
 #goto_egocentrique(0.2,0.2, 5)
 #goto_absolu(1, 1, 45, 2, 2, 5)
 
-def goto_bezier_no_audom():
+def goto_bezier_no_audom(x0,y0, x1,y1, x2,y2, x3,y3, temps_deplacement=1):
 
-    temps_deplacement = 1
+    #ctrl = [(0, 0), (1, 0), (0.75, 0.98), (0.5, 0.5)]
+    ctrl = [(x0, y0), (x1, y1), (x2, y2), (x3, y3)]
+    traj = bezier_curve(ctrl, n_points=10)
+
+    #temps_deplacement = 1
     last_time = time.time()
 
     for k in range(len(traj)-1):
@@ -187,8 +195,43 @@ def goto_bezier_audom():
 # goto_absolu(1.1, 0.01, theta_robot, 0.01, 0.01, 5)
 # print("fin courbe", theta_robot*180/np.pi)
 
-print("fin")
+print("Pret")
 
 dxl_io.set_moving_speed({dxl1: 0})
 dxl_io.set_moving_speed({dxl2: 0})
+
+if len(sys.argv) < 2:
+    print("Usage: python3 mon_script.py <argument>")
+    sys.exit(1)
+
+argument = sys.argv[1]
+if argument == "arc_cercle":
+    entree = input("Entrée (x, y, temps de deplacement) : ")
+    liste_entree = entree.split(",")
+    liste_entree = [float(ent) for ent in liste_entree]
+    print(liste_entree)
+
+    goto_egocentrique(liste_entree[0],liste_entree[1],liste_entree[2])
+    dxl_io.set_moving_speed({dxl1: 0})
+    dxl_io.set_moving_speed({dxl2: 0})
+
+if argument == "goto_absolu":
+    entree = input("Entrée (x0, y0, theta0, x1, y1, temps de deplacement) : ")
+    liste_entree = entree.split(",")
+    liste_entree = [float(ent) for ent in liste_entree]
+    print(liste_entree)
+
+    goto_absolu(liste_entree[0], liste_entree[1], liste_entree[2], liste_entree[3], liste_entree[4], liste_entree[5])
+    dxl_io.set_moving_speed({dxl1: 0})
+    dxl_io.set_moving_speed({dxl2: 0})
+
+if argument == "bezier_no_odom":
+    entree = input("Entrée (x0,y0, x1,y1, x2,y2, x3,y3, temps_deplacement): ")
+    liste_entree = entree.split(",")
+    liste_entree = [float(ent) for ent in liste_entree]
+    print(liste_entree)
+
+    goto_bezier_no_audom(liste_entree[0], liste_entree[1], liste_entree[2], liste_entree[3], liste_entree[4], liste_entree[5], liste_entree[6], liste_entree[7], liste_entree[8])
+    dxl_io.set_moving_speed({dxl1: 0})
+    dxl_io.set_moving_speed({dxl2: 0})
 

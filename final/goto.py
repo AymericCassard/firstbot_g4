@@ -67,8 +67,6 @@ def goto_egocentrique(xr,yr,temps_deplacement): #([m], [m], [s])
 
     theta_robot += dtheta
 
-
-
 def goto_absolu(x0, y0, theta0, x1, y1, temps_deplacement): #([m], [m], [deg], [m], [m], [s])
 
     #theta0 = thetadeg0*np.pi/180
@@ -83,9 +81,9 @@ def goto_absolu(x0, y0, theta0, x1, y1, temps_deplacement): #([m], [m], [deg], [
     xr = costheta*(x1-x0)+sintheta*(y1-y0)
     yr = -sintheta*(x1-x0)+costheta*(y1-y0)
 
+
+
     goto_egocentrique(xr,yr,temps_deplacement)
-
-
 
 def bezier_curve(control_points, n_points=100):
     """
@@ -112,13 +110,15 @@ def bezier_curve(control_points, n_points=100):
     # Conversion en liste de tuples
     return [tuple(pt) for pt in curve]
 
-ctrl = [(0, 0), (1, 0), (0.75, 0.98), (0.5, 0.5)]
-traj = bezier_curve(ctrl, n_points=10)
+
 
 #goto_egocentrique(0.2,0.2, 5)
 #goto_absolu(1, 1, 45, 2, 2, 5)
 
-def goto_bezier_no_audom():
+def goto_bezier_no_audom(ctrl):
+
+    #ctrl = [(0, 0), (1, 0), (0.75, 0.98), (0.5, 0.5)]
+    traj = bezier_curve(ctrl, n_points=10)
 
     temps_deplacement = 1
     last_time = time.time()
@@ -140,7 +140,10 @@ def goto_bezier_no_audom():
     dxl_io.set_moving_speed({dxl1: 0})
     dxl_io.set_moving_speed({dxl2: 0})
 
-def goto_bezier_audom():
+def goto_bezier_audom(ctrl):
+
+    #ctrl = [(0, 0), (1, 0), (0.75, 0.98), (0.5, 0.5)]
+    traj = bezier_curve(ctrl, n_points=10)
 
     f = open("positions_goto.txt", "w+")
 
