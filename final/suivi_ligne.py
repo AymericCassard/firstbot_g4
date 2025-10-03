@@ -8,6 +8,13 @@ import sys
 
 webcam = cv2.VideoCapture(0)
 
+print("(0 = jaune, 1 = bleu , 2 = rouge)")
+target = input("")
+
+if not target.isdigit():
+    exit("target incorrect")
+target = int(target)
+
 if len(sys.argv) < 2:
     print("Usage: python3 mon_script.py <argument>")
     sys.exit(1)
@@ -43,14 +50,14 @@ dxl_io.set_wheel_mode([1])
 dxl1=1
 dxl2=2
 
-base_speed = 250  # vitesse de base
+base_speed = 200  # vitesse de base
 Kp = 8     # gain proportionnelcd
 Kd = 0.0      # dérivée
 dt = 0.1  # intervalle de temps entre deux mesures (en sec)
 previous_error=0
 
 ret, frame = webcam.read()
-positions_couleurs= couleur.moyenne_couleurs(frame)
+positions_couleurs= couleur.moyenne_couleurs(frame, False)
 
 stuck = False
 
@@ -60,8 +67,8 @@ if not follow_line :
 try :
     while(True):
         if follow_line :
-            if(positions_couleurs[0]<=1000):
-                error = positions_couleurs[0]
+            if(positions_couleurs[target]<=1000):
+                error = positions_couleurs[target]
 
                 # Proportionnelle
                 P = Kp * error
@@ -83,7 +90,7 @@ try :
                 previous_error = error
 
                 ret, frame = webcam.read()
-                positions_couleurs= couleur.moyenne_couleurs(frame)
+                positions_couleurs= couleur.moyenne_couleurs(frame, False)
                 stuck=False
             else:
                 if(stuck==True):
@@ -97,7 +104,7 @@ try :
                     dxl_io.set_moving_speed({dxl2: right_speed})
 
                 ret, frame = webcam.read()
-                positions_couleurs= couleur.moyenne_couleurs_full_image(frame)
+                positions_couleurs= couleur.moyenne_couleurs_full_image(frame, False)
                 stuck=True
 
             #cv2.imshow('frame', frame)
