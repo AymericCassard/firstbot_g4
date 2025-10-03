@@ -17,7 +17,7 @@ camera_index = 0
 x, y, theta = 0, 0, 0
 
 #BOOLEANS
-follow_line = True
+follow_line = False
 capture_positions = True
 capture_images = True
 
