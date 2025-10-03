@@ -1,4 +1,4 @@
-#!/bin/bashgit st
+#!/bin/bash
 # Vérifier qu'un argument a été fourni
 if [ -z "$1" ]; then
     echo "Usage: $0 <nom>"
