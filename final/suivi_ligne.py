@@ -60,66 +60,69 @@ stuck = False
 if not follow_line :
     dxl_io.disable_torque([1, 2])
 
-while(True):
-    if follow_line :
-        if(positions_couleurs[0]<=1000):
-            error = positions_couleurs[0]
+try :
+    while(True):
+        if follow_line :
+            if(positions_couleurs[0]<=1000):
+                error = positions_couleurs[0]
 
-            # Proportionnelle
-            P = Kp * error
+                # Proportionnelle
+                P = Kp * error
 
-            # Dérivée
-            D = Kd * (error - previous_error) / dt
+                # Dérivée
+                D = Kd * (error - previous_error) / dt
 
-            # Correction totale
-            correction = P + D
+                # Correction totale
+                correction = P + D
 
-            # Vitesses des roues
-            left_speed  = - (base_speed - correction)
-            right_speed =   (base_speed + correction)
+                # Vitesses des roues
+                left_speed  = - (base_speed - correction)
+                right_speed =   (base_speed + correction)
 
-            # Envoi aux moteurs
-            dxl_io.set_moving_speed({dxl1: left_speed})
-            dxl_io.set_moving_speed({dxl2: right_speed})
-
-            previous_error = error
-
-            ret, frame = webcam.read()
-            positions_couleurs= couleur.moyenne_couleurs(frame)
-            stuck=False
-        else:
-            if(stuck==True):
-                if(previous_error>0):
-                    left_speed  = 100
-                    right_speed = 100
-                else:
-                    left_speed  = -100
-                    right_speed = -100
+                # Envoi aux moteurs
                 dxl_io.set_moving_speed({dxl1: left_speed})
                 dxl_io.set_moving_speed({dxl2: right_speed})
 
-            ret, frame = webcam.read()
-            positions_couleurs= couleur.moyenne_couleurs_full_image(frame)
-            stuck=True
+                previous_error = error
 
-        #cv2.imshow('frame', frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-        #time.sleep(0.1)
+                ret, frame = webcam.read()
+                positions_couleurs= couleur.moyenne_couleurs(frame)
+                stuck=False
+            else:
+                if(stuck==True):
+                    if(previous_error>0):
+                        left_speed  = 100
+                        right_speed = 100
+                    else:
+                        left_speed  = -100
+                        right_speed = -100
+                    dxl_io.set_moving_speed({dxl1: left_speed})
+                    dxl_io.set_moving_speed({dxl2: right_speed})
 
-    if capture_positions :
-        diff_time = time.time() - last_time
-        if diff_time > 0.02:  # Capture every 0.1 seconds
-            last_time = time.time()
-            x, y, theta = dynamics.detect_path(f, "g", diff_time, x, y, theta, dxl_io, dxl1, dxl2)
-    
-    if capture_images and camera_time + 0.1 < time.time():
-        camera_time = time.time() 
-        camera_index += 1
-        cv2.imwrite("images/image"+str(camera_index)+".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 90])
-        print("Image saved in",time.time()-camera_time,"secondes")  
+                ret, frame = webcam.read()
+                positions_couleurs= couleur.moyenne_couleurs_full_image(frame)
+                stuck=True
 
+            #cv2.imshow('frame', frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+            #time.sleep(0.1)
 
-webcam.release()
-#cv2.destroyAllWindows()
-f.close()
+        if capture_positions :
+            diff_time = time.time() - last_time
+            if diff_time > 0.02:  # Capture every 0.1 seconds
+                last_time = time.time()
+                x, y, theta = dynamics.detect_path(f, "g", diff_time, x, y, theta, dxl_io, dxl1, dxl2)
+        
+        if capture_images and camera_time + 0.1 < time.time():
+            camera_time = time.time() 
+            camera_index += 1
+            cv2.imwrite("images/image"+str(camera_index)+".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 90])
+            print("Image saved in",time.time()-camera_time,"secondes")  
+
+except KeyboardInterrupt:
+    print("Interrupted by user")
+    webcam.release()
+    #cv2.destroyAllWindows()
+    f.close()
+    exit()

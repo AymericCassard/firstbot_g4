@@ -1,6 +1,4 @@
-#!/bin/bash
-trap '' SIGINT   # le Bash ignore CTRL+C
-
+#!/bin/bashgit st
 # Vérifier qu'un argument a été fourni
 if [ -z "$1" ]; then
     echo "Usage: $0 <nom>"
